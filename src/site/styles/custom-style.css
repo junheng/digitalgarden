@@ -1,0 +1,215 @@
+/* ========================================
+   Diomgis' Nexus — Matrix / Razer Theme
+   Green-on-black cyberpunk aesthetic
+   ======================================== */
+
+:root {
+  /* Core palette */
+  --matrix-green: #00ff41;
+  --matrix-green-dim: #00cc33;
+  --matrix-green-dark: #00802b;
+  --matrix-green-glow: rgba(0, 255, 65, 0.15);
+  --matrix-bg: #0a0a0a;
+  --matrix-bg-secondary: #111111;
+  --matrix-bg-tertiary: #1a1a1a;
+  --matrix-text: #c0c0c0;
+  --matrix-text-bright: #e0e0e0;
+  --matrix-border: #1e1e1e;
+}
+
+/* Background */
+body {
+  background-color: var(--matrix-bg) !important;
+  color: var(--matrix-text) !important;
+}
+
+.content {
+  background-color: var(--matrix-bg) !important;
+}
+
+/* Navbar */
+.navbar, .empty-navbar {
+  background-color: var(--matrix-bg-secondary) !important;
+  border-bottom: 1px solid var(--matrix-green-dark) !important;
+}
+
+.navbar h1 {
+  color: var(--matrix-green) !important;
+  text-shadow: 0 0 10px var(--matrix-green-glow);
+  font-family: 'Courier New', 'Fira Code', monospace !important;
+  letter-spacing: 2px;
+}
+
+/* Headings */
+.content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+  color: var(--matrix-green) !important;
+  text-shadow: 0 0 8px var(--matrix-green-glow);
+}
+
+.content h1 { border-bottom: 1px solid var(--matrix-green-dark) !important; padding-bottom: 8px; }
+.content h2 { color: var(--matrix-green-dim) !important; }
+.content h3 { color: var(--matrix-green-dark) !important; text-shadow: none; }
+
+/* Links */
+a, .internal-link, .backlink {
+  color: var(--matrix-green) !important;
+  text-decoration: none !important;
+}
+
+a:hover, .internal-link:hover, .backlink:hover {
+  color: var(--matrix-green) !important;
+  text-shadow: 0 0 12px var(--matrix-green-glow);
+  text-decoration: underline !important;
+}
+
+/* Code blocks — terminal feel */
+pre, code {
+  background-color: #0d0d0d !important;
+  border: 1px solid var(--matrix-green-dark) !important;
+  color: var(--matrix-green) !important;
+  font-family: 'Fira Code', 'Courier New', monospace !important;
+}
+
+code {
+  border-radius: 3px;
+  padding: 2px 5px;
+}
+
+pre {
+  border-radius: 4px;
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.05);
+}
+
+/* Inline code */
+p code, li code, td code {
+  background-color: var(--matrix-bg-tertiary) !important;
+  color: var(--matrix-green-dim) !important;
+  font-size: 0.9em;
+}
+
+/* Blockquotes — for the Emperor's words */
+blockquote {
+  border-left: 3px solid var(--matrix-green-dark) !important;
+  background-color: var(--matrix-bg-secondary) !important;
+  color: var(--matrix-green-dim) !important;
+  padding: 10px 16px !important;
+}
+
+blockquote em {
+  color: var(--matrix-green) !important;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+}
+
+th {
+  background-color: var(--matrix-bg-tertiary) !important;
+  color: var(--matrix-green) !important;
+  border: 1px solid var(--matrix-green-dark) !important;
+}
+
+td {
+  border: 1px solid var(--matrix-border) !important;
+  color: var(--matrix-text) !important;
+}
+
+tr:hover td {
+  background-color: var(--matrix-bg-secondary) !important;
+}
+
+/* Tags */
+.tag {
+  background-color: var(--matrix-bg-tertiary) !important;
+  color: var(--matrix-green-dim) !important;
+  border: 1px solid var(--matrix-green-dark) !important;
+  border-radius: 3px;
+  padding: 2px 8px;
+}
+
+.tag:hover {
+  background-color: var(--matrix-green-dark) !important;
+  color: var(--matrix-bg) !important;
+}
+
+/* Sidebar */
+.sidebar {
+  background-color: var(--matrix-bg-secondary) !important;
+  border-left: 1px solid var(--matrix-border) !important;
+}
+
+.backlink-title, .toc-title {
+  color: var(--matrix-green-dim) !important;
+  font-family: 'Courier New', monospace !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Search */
+.search-button {
+  color: var(--matrix-green-dim) !important;
+}
+
+.search-button:hover {
+  color: var(--matrix-green) !important;
+}
+
+/* Callouts */
+.callout {
+  background-color: var(--matrix-bg-secondary) !important;
+  border-color: var(--matrix-green-dark) !important;
+}
+
+.callout-title {
+  color: var(--matrix-green) !important;
+}
+
+/* Horizontal rule */
+hr {
+  border-color: var(--matrix-green-dark) !important;
+  opacity: 0.5;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--matrix-green-dark) !important;
+  color: var(--matrix-bg) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--matrix-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--matrix-green-dark);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--matrix-green-dim);
+}
+
+/* Lists */
+ul, ol {
+  color: var(--matrix-text) !important;
+}
+
+li::marker {
+  color: var(--matrix-green-dark) !important;
+}
+
+/* Strong / Bold */
+strong {
+  color: var(--matrix-text-bright) !important;
+}
+
+/* Emphasis */
+em {
+  color: var(--matrix-green-dim) !important;
+}
