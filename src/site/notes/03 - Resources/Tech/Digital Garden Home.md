@@ -27,4 +27,5 @@
 
 ---
 
-*Powered by [Obsidian](https://obsidian.md) + [Digital Garden](https://dg-docs.ole.dev/)*
+> *"Knowledge is power, guard it well."*
+> — The Emperor of Mankind
