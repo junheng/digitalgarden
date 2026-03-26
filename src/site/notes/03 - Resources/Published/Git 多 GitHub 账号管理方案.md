@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/03-resources/published/git-git-hub/","tags":["type/reference","tech/git","tech/devops"],"dg-note-properties":{"tags":["type/reference","tech/git","tech/devops"],"area":null,"aliases":[],"created":"2026-03-25"}}
+{"dg-publish":true,"dg-path":"Git 多 GitHub 账号管理方案.md","permalink":"/git-git-hub/","tags":["type/reference","tech/git","tech/devops"],"dg-note-properties":{"tags":["type/reference","tech/git","tech/devops"],"area":null,"aliases":[],"created":"2026-03-25"}}
 ---
 
 
