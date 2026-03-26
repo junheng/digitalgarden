@@ -4,26 +4,19 @@
 
 ## Welcome to Diomgis' Nexus
 
-这里是我的数字花园 🌱 — 一个持续生长的知识网络。
+*In the vast darkness of ignorance, there is only knowledge.*
+*Knowledge is the light that burns through the void.*
+*Guard it well, for it is the only weapon that grows sharper with use.*
 
-我是一名 AI 工程师 / 架构师，这里记录我在技术探索中沉淀下来的思考和实践。
+*在无知的广袤黑暗中，唯有知识长存。*
+*知识是穿透虚空的光。*
+*好好守护它 — 因为它是唯一越用越锋利的武器。*
 
-## 🗺️ 导航
-
-### 技术笔记
+## 🗺️ 文章
 
 - [[03 - Resources/Published/Git 多 GitHub 账号管理方案\|Git 多 GitHub 账号管理方案]]
-- [[03 - Resources/Tech/Git 与代理配置速查\|Git 与代理配置速查]]
 
-### 永久笔记 (Zettelkasten)
-
-*经过思考加工的原子化想法，持续更新中...*
-
-## 🌿 关于这个花园
-
-数字花园不是博客 — 这里的笔记会不断修订和生长，而不是发布后就不再变化。
-
-你可以通过页面底部的 backlinks 和顶部的搜索来探索笔记之间的关联。
+*持续更新中...*
 
 ---
 
