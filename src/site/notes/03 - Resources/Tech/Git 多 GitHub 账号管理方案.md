@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/03-resources/tech/git-git-hub/","tags":["type/reference","tech/git","tech/devops","gardenEntry"],"dg-note-properties":{"tags":["type/reference","tech/git","tech/devops","gardenEntry"],"area":null,"aliases":[],"created":"2026-03-25"}}
+{"dg-publish":true,"permalink":"/03-resources/tech/git-git-hub/","tags":["type/reference","tech/git","tech/devops"],"dg-note-properties":{"tags":["type/reference","tech/git","tech/devops"],"area":null,"aliases":[],"created":"2026-03-25"}}
 ---
 
 
