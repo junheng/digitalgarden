@@ -29,16 +29,25 @@ ssh-keygen -t ed25519 -C "personal-account" -f ~/.ssh/id_personal
 通过 `gh` 添加到对应账号：
 
 ```bash
-# 公司账号（gh 当前登录）
+# 确保两个账号都已登录
+gh auth login -h github.com  # 登录第一个账号
+gh auth login -h github.com  # 登录第二个账号（gh 支持多账号）
+
+# 个人账号（当前活跃）
+gh auth switch -u personal-account
+gh auth refresh -h github.com -s admin:public_key  # 添加 SSH key 管理权限
+gh ssh-key add ~/.ssh/id_personal.pub --title "WSL-personal-ed25519"
+
+# 公司账号
+gh auth switch -u work-account
+gh auth refresh -h github.com -s admin:public_key
 gh ssh-key add ~/.ssh/id_work.pub --title "WSL-work-ed25519"
 
-# 个人账号（先切换）
-gh auth login -h github.com
-gh ssh-key add ~/.ssh/id_personal.pub --title "WSL-personal-ed25519"
-gh auth switch -u work-account  # 切回公司账号
+# 切回日常使用的账号
+gh auth switch -u personal-account
 ```
 
-> [!tip] `gh` 需要 `admin:public_key` scope，首次可能需要 `gh auth refresh -h github.com -s admin:public_key`。
+> [!tip] `gh auth refresh -s admin:public_key` 会打开浏览器授权，每个账号只需做一次。授权后 `gh ssh-key add` 即可直接使用。
 
 ## 2. SSH Config
 
