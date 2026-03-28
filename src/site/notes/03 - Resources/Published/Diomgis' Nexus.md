@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/03-resources/published/diomgis-nexus/","pinned":true,"tags":["type/reference","gardenEntry"],"dg-note-properties":{"tags":["type/reference","gardenEntry"]}}
+{"dg-publish":true,"dg-path":"Diomgis' Nexus.md","permalink":"/diomgis-nexus/","pinned":true,"tags":["type/reference","gardenEntry"],"dg-note-properties":{"tags":["type/reference","gardenEntry"]}}
 ---
 
 ## Welcome to Diomgis' Nexus

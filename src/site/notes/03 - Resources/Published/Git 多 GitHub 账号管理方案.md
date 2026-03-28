@@ -136,7 +136,33 @@ Host github-work
 | SSH key 别名 | ✅ 原生 | 低 | 推荐，一次配置零维护 |
 | HTTPS + GCM | ✅ | 中 | Linux 上需额外配置 |
 | HTTPS + PAT | 需 useHttpPath | 高 | token 过期需手动刷新 |
-| gh CLI | 单账号为主 | 高 | 多账号支持差 |
+| gh CLI | ✅ wrapper | 低 | 见下方 |
+
+## 7. gh CLI 自动切换账号
+
+`gh` 原生支持多账号（`gh auth login` 添加，`gh auth switch` 切换），但不支持按目录自动切换。在 `~/.bashrc` 中添加 wrapper 函数：
+
+```bash
+gh() {
+  local acct="personal-account"
+  case "$PWD/" in
+    */Projects/work/*)
+      acct="work-account" ;;
+  esac
+  local current
+  current=$(command gh auth status 2>&1 \
+    | grep -B1 "Active account: true" | head -1 \
+    | grep -oP 'account \K\S+')
+  if [[ "$current" != "$acct" ]]; then
+    command gh auth switch --user "$acct" 2>/dev/null
+  fi
+  command gh "$@"
+}
+```
+
+规则：默认用个人账号，只有在工作目录下才切换到工作账号。`$PWD/` 尾部加 `/` 确保精确匹配目录前缀。
+
+> [!tip] 如果有 Obsidian vault 等非 git 目录也需要区分账号，在 `case` 中追加路径即可。
 
 ## 新增账号
 
