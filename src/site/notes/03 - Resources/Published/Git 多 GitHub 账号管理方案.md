@@ -144,10 +144,10 @@ Host github-work
 
 ```bash
 gh() {
-  local acct="personal-account"
+  local acct="junheng"
   case "$PWD/" in
-    */Projects/work/*)
-      acct="work-account" ;;
+    */Projects/pinguo/*)
+      acct="pinguo-gongjunheng" ;;
   esac
   local current
   current=$(command gh auth status 2>&1 \
