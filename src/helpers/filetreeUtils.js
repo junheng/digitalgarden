@@ -56,6 +56,17 @@ const sortTree = (unsorted) => {
         return -1;
       }
 
+      if (a_is_note && b_is_note) {
+        const a_date = unsorted[a].created || "";
+        const b_date = unsorted[b].created || "";
+        if (a_date && b_date) {
+          if (a_date > b_date) return -1;
+          if (a_date < b_date) return 1;
+        }
+        if (a_date && !b_date) return -1;
+        if (!a_date && b_date) return 1;
+      }
+
       return naturalCompare(a, b);
     })
     .reduce((obj, key) => {
