@@ -1,0 +1,43 @@
+<script defer>
+(function () {
+  // Only on article pages, not homepage or special pages
+  var path = window.location.pathname;
+  if (path === "/" || path === "/About/" || path === "/About") return;
+
+  // Find the date from the timestamp element (rendered by 11ty from frontmatter)
+  var dateEl = document.querySelector('.human-date[data-date]');
+  if (!dateEl) return;
+
+  var dateStr = dateEl.getAttribute('data-date');
+  var date = new Date(dateStr);
+  if (isNaN(date.getTime())) return;
+
+  var now = new Date();
+  var ageDays = (now - date) / (1000 * 60 * 60 * 24);
+  var ageMonths = ageDays / 30.44;
+
+  var level, message;
+  if (ageMonths > 6) {
+    level = "expired";
+    message =
+      '本文发布已超过 <strong>6 个月</strong>。Agentic Engineering 和 LLM 领域发展极快，' +
+      '文中观点和结论可能已过时，<strong>不建议作为决策依据</strong>。';
+  } else if (ageMonths > 3) {
+    level = "caution";
+    message =
+      '本文发布已超过 <strong>3 个月</strong>。该领域以月为单位迭代，' +
+      '请<strong>谨慎参考</strong>并交叉验证文中观点。';
+  }
+
+  if (!level) return;
+
+  var banner = document.createElement("div");
+  banner.className = "freshness-banner " + level;
+  banner.innerHTML = message;
+
+  var content = document.querySelector("main.content");
+  if (content) {
+    content.insertBefore(banner, content.firstChild);
+  }
+})();
+</script>

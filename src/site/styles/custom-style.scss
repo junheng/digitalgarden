@@ -3,11 +3,50 @@ body {
       ADD YOUR CUSTOM STYLING HERE. (INSIDE THE body {...} section.)
       IT WILL TAKE PRECEDENCE OVER THE STYLING IN THE STYLE.CSS FILE.
    ***/
-    //  background-color: white;
-    //  .content {
-    //   font-size: 14px;
-    //  }
-    //  h1 {
-    //   color: black;
-    //  }
+}
+
+/* === Freshness Warning Banner === */
+
+.freshness-banner {
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.freshness-banner::before {
+  content: "⏳";
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* 3-6 months: yellow/caution */
+.freshness-banner.caution {
+  background: rgba(180, 150, 0, 0.15);
+  border-left: 3px solid #b89600;
+  color: #d4c080;
+}
+
+.freshness-banner.caution::before {
+  content: "⚠️";
+}
+
+/* 6+ months: red/expired */
+.freshness-banner.expired {
+  background: rgba(180, 60, 0, 0.15);
+  border-left: 3px solid #b83c00;
+  color: #d49070;
+}
+
+.freshness-banner.expired::before {
+  content: "🚫";
+}
+
+.freshness-banner a {
+  color: inherit;
+  text-decoration: underline;
 }
