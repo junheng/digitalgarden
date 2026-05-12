@@ -78,3 +78,35 @@ body {
   margin-top: 1px;
   margin-left: 0;
 }
+
+/* === Top Navigation (Home / About) === */
+
+.filetree-nav {
+  display: flex;
+  gap: 0;
+  padding: 0 0 8px 0;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--background-modifier-border);
+  flex-shrink: 0;
+}
+
+.filetree-nav-item {
+  flex: 1;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 0.85rem;
+  text-decoration: none;
+  color: var(--text-muted);
+  border-radius: 4px;
+  transition: background-color 0.15s;
+}
+
+.filetree-nav-item:hover {
+  background: var(--dg-notelink-hover-bg);
+  color: var(--text-normal);
+}
+
+.filetree-nav-item.active {
+  color: var(--text-accent);
+  font-weight: 600;
+}

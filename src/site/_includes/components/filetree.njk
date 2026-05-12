@@ -1,7 +1,7 @@
 {% macro menuItem(fileOrFolderName, fileOrFolder, step, currentPath) %}
     {%if fileOrFolder.isNote or fileOrFolder.isFolder%}
         <div x-show="isOpen" style="display:none" class="{{'filelist' if step>0}}">
-            {%if fileOrFolder.isNote and not fileOrFolder.hide %}
+            {%if fileOrFolder.isNote and not fileOrFolder.hide and fileOrFolder.permalink !== "/" and fileOrFolder.permalink !== "/About/" %}
                 <div @click.stop class="notelink {{ 'active-note' if fileOrFolder.permalink === permalink}}">
                     <a data-note-icon="{{fileOrFolder.noteIcon}}" style="text-decoration: none;" class="filename" href="{{fileOrFolder.permalink}}">{{fileOrFolder.name}} </a>
                     {% if fileOrFolder.created and fileOrFolder.permalink !== "/" %}
@@ -54,6 +54,10 @@
         {% if settings.dgEnableSearch === true%}
             {% include "components/searchButton.njk" %}
         {%endif%}
+         <div class="filetree-nav">
+               <a href="/" class="filetree-nav-item {{ 'active' if permalink === '/' }}">Home</a>
+               <a href="/About/" class="filetree-nav-item {{ 'active' if '/About/' in permalink }}">About</a>
+         </div>
          <div class="folder" x-data="{isOpen: true}">
                {%- for fileOrFolderName, fileOrFolder in filetree -%}
                   {{menuItem(fileOrFolderName, fileOrFolder, 0, fileOrFolderName)}}
