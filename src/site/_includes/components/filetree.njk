@@ -56,7 +56,7 @@
         {%endif%}
          <div class="filetree-nav">
                <a href="/" class="filetree-nav-item {{ 'active' if permalink === '/' }}">Nexus</a>
-               <a href="/About/" class="filetree-nav-item {{ 'active' if '/About/' in permalink }}">Curator</a>
+               <a href="/About/" class="filetree-nav-item {{ 'active' if '/About/' in permalink }}">Re:</a>
          </div>
          <div class="folder" x-data="{isOpen: true}">
                {%- for fileOrFolderName, fileOrFolder in filetree -%}
