@@ -105,6 +105,8 @@ function getPermalinkMeta(note, key) {
     }
     if (note.data.created) {
       created = note.data.created;
+    } else if (note.data["dg-note-properties"] && note.data["dg-note-properties"].created) {
+      created = note.data["dg-note-properties"].created;
     }
     if (note.data["dg-path"]) {
       folders = note.data["dg-path"].split("/");
