@@ -4,8 +4,15 @@
   var path = window.location.pathname;
   if (path === "/" || path === "/About/" || path === "/About") return;
 
-  // Find the date from the timestamp element (rendered by 11ty from frontmatter)
-  var dateEl = document.querySelector('.human-date[data-date]');
+  // Prefer 'updated' date, fall back to 'created'
+  // In the DOM: <i data-lucide="calendar-clock"> (updated) and <i data-lucide="calendar-plus"> (created)
+  var updatedIcon = document.querySelector('[data-lucide="calendar-clock"]');
+  var dateEl;
+  if (updatedIcon) {
+    dateEl = updatedIcon.parentElement.querySelector('.human-date[data-date]');
+  } else {
+    dateEl = document.querySelector('.human-date[data-date]');
+  }
   if (!dateEl) return;
 
   var dateStr = dateEl.getAttribute('data-date');
