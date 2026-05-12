@@ -80,6 +80,7 @@ function getPermalinkMeta(note, key) {
   let noteIcon = process.env.NOTE_ICON_DEFAULT;
   let hide = false;
   let pinned = false;
+  let created = null;
   let folders = null;
   try {
     if (note.data.permalink) {
@@ -102,6 +103,9 @@ function getPermalinkMeta(note, key) {
     if (note.data.pinned) {
       pinned = note.data.pinned;
     }
+    if (note.data.created) {
+      created = note.data.created;
+    }
     if (note.data["dg-path"]) {
       folders = note.data["dg-path"].split("/");
     } else {
@@ -118,7 +122,7 @@ function getPermalinkMeta(note, key) {
     //ignore
   }
 
-  return [{ permalink, name, noteIcon, hide, pinned }, folders];
+  return [{ permalink, name, noteIcon, hide, pinned, created }, folders];
 }
 
 function assignNested(obj, keyPath, value) {
