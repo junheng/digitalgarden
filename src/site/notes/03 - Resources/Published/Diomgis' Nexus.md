@@ -3,19 +3,6 @@
 ---
 
 
-## Welcome to Diomgis' Nexus
-
-*In the vast darkness of ignorance, there is only knowledge.*
-*Knowledge is the light that burns through the void.*
-*Guard it well, for it is the only weapon that grows sharper with use.*
-
----
-
-> *"Knowledge is power, guard it well."*
-> — The Emperor of Mankind
-
----
-
 ## 但请注意：这里的知识会过期。
 
 这个网站讨论的主题——Agentic Engineering、LLM 模型能力、Harness 设计——**正在以月为单位迭代**。
