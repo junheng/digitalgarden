@@ -111,3 +111,34 @@ body {
   color: var(--text-accent);
   font-weight: 600;
 }
+
+/* === Site Footer === */
+
+.site-footer {
+  margin-top: 60px;
+  padding: 16px 0;
+  border-top: 1px solid var(--background-modifier-border);
+  font-size: 0.8rem;
+  color: var(--text-faint);
+}
+
+.site-footer a {
+  color: var(--text-muted);
+  text-decoration: underline;
+}
+
+.site-footer a:hover {
+  color: var(--text-accent);
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+.footer-sep {
+  color: var(--text-faint);
+  margin: 0 4px;
+}
