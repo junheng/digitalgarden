@@ -115,8 +115,9 @@ body {
 /* === Site Footer === */
 
 .site-footer {
-  margin-top: 60px;
-  padding: 16px 0;
+  margin-left: var(--dg-filetree-width);
+  margin-top: 40px;
+  padding: 12px 24px;
   border-top: 1px solid var(--background-modifier-border);
   font-size: 0.8rem;
   color: var(--text-faint);
@@ -129,16 +130,4 @@ body {
 
 .site-footer a:hover {
   color: var(--text-accent);
-}
-
-.footer-content {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  align-items: center;
-}
-
-.footer-sep {
-  color: var(--text-faint);
-  margin: 0 4px;
 }
