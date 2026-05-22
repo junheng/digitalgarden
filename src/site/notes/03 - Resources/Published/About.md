@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"dg-path":"About.md","permalink":"/About/","tags":["type/reference"],"created":"2026-05-12T14:49:24.251+08:00","updated":"2026-05-12T18:10:27.612+08:00","dg-note-properties":{"tags":["type/reference"],"created":"2026-05-12","description":"关于本网站及其作者：研究方向、技术理念、可协作领域。"}}
+{"dg-publish":true,"dg-path":"About.md","permalink":"/About/","tags":["type/reference"],"created":"2026-05-22T16:54:47.386+08:00","updated":"2026-05-22T16:54:47.390+08:00","dg-note-properties":{"tags":["type/reference"],"created":"2026-05-12","description":"关于本网站及其作者：研究方向、技术理念、可协作领域。"}}
 ---
 
 
@@ -32,7 +32,10 @@ Diomgis' Nexus 是一个关于 **Agentic Engineering** 的实践笔记。
 
 ## 协作与交流
 
-如果你在以下方向有实践经验或不同观点，欢迎通过 GitHub 或其他渠道交流：
+如果你在以下方向有实践经验或不同观点，欢迎交流：
+
+- [GitHub Discussions](https://github.com/junheng/digitalgarden/discussions)（文章讨论）
+- 邮件：`diomgis@icloud.com`（私下交流）
 
 - Agent 系统的工程化落地（尤其是 harness 架构设计）
 - 团队的 AI 转型（招聘标准、工作流重构、评估体系）
