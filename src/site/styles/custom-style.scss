@@ -111,13 +111,17 @@ body {
   color: var(--text-accent);
   font-weight: 600;
 }
-
 /* === Site Footer === */
 
 .site-footer {
-  margin-left: var(--dg-filetree-width);
-  margin-top: 40px;
-  padding: 12px 24px;
+  margin-left: max(
+    calc(var(--dg-filetree-min-width) + var(--dg-filetree-gap)),
+    min(
+      calc((100vw - var(--dg-content-max-width)) / 2),
+      calc(100vw - var(--dg-content-max-width) - var(--dg-sidebar-max-width) - var(--dg-sidebar-gap) - 20px)
+    )
+  );
+  padding: 16px 0 30px 0;
   border-top: 1px solid var(--background-modifier-border);
   font-size: 0.8rem;
   color: var(--text-faint);
@@ -130,4 +134,11 @@ body {
 
 .site-footer a:hover {
   color: var(--text-accent);
+}
+
+@media (max-width: 800px) {
+  .site-footer {
+    margin-left: 0;
+    padding: 12px 16px 20px 16px;
+  }
 }
