@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"dg-path":"无序 Vibe Coding 的隐性代价.md","permalink":"/无序 Vibe Coding 的隐性代价/","tags":["type/article","area/ai","area/management"],"dg-note-properties":{"tags":["type/article","area/ai","area/management"],"created":"2026-03-30","description":"无序 Vibe Coding 在生产环境中的隐性代价：指数级退化、Token 成本恶性循环，以及管理层应该怎么做。"}}
+{"dg-publish":true,"dg-path":"无序 Vibe Coding 的隐性代价.md","permalink":"/无序 Vibe Coding 的隐性代价/","tags":["type/article","area/ai","area/management"],"created":"2026-03-30T14:15:24.436+08:00","updated":"2026-03-30T14:18:16.558+08:00","dg-note-properties":{"tags":["type/article","area/ai","area/management"],"created":"2026-03-30","description":"无序 Vibe Coding 在生产环境中的隐性代价：指数级退化、Token 成本恶性循环，以及管理层应该怎么做。"}}
 ---
 
 
