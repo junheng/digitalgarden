@@ -95,6 +95,7 @@ module.exports = async (data) => {
     timestampSettings,
     baseTheme: process.env.BASE_THEME || "dark",
     siteName: process.env.SITE_NAME_HEADER || "Digital Garden",
+    siteDescription: process.env.SITE_DESCRIPTION || "A personal digital garden — notes, ideas, and explorations in technology, architecture, and beyond.",
     siteLogoPath: logoPath,
     mainLanguage: process.env.SITE_MAIN_LANGUAGE || "en",
     siteBaseUrl: baseUrl,

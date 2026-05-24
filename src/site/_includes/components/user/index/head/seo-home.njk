@@ -1,0 +1,17 @@
+{# Home page SEO: description, OG website type, JSON-LD WebSite #}
+<meta name="description" content="{{ meta.siteDescription }}">
+<meta property="og:title" content="{{ meta.siteName }}">
+<meta property="og:description" content="{{ meta.siteDescription }}">
+<meta property="og:type" content="website">
+<meta name="twitter:title" content="{{ meta.siteName }}">
+<meta name="twitter:description" content="{{ meta.siteDescription }}">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "{{ meta.siteName }}",
+  "description": "{{ meta.siteDescription }}",
+  "url": "{{ meta.siteBaseUrl }}"
+}
+</script>

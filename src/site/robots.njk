@@ -1,0 +1,9 @@
+---
+permalink: /robots.txt
+eleventyExcludeFromCollections: true
+---
+User-agent: *
+Allow: /
+{% if meta.siteBaseUrl %}
+Sitemap: {{ meta.siteBaseUrl }}/sitemap.xml
+{% endif %}

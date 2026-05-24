@@ -5,9 +5,22 @@ eleventyExcludeFromCollections: true
 <?xml version="1.0" encoding="utf-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     {% for page in collections.all %}
+        {% set url = page.url | url %}
+        {% if url != "/404/" and url != "/feed.xml" and url != "/sitemap.xml" and url != "/robots.txt" %}
         <url>
-            <loc>{{ meta.siteBaseUrl }}{{ page.url | url }}</loc>
-            <lastmod>{%if page.data.updated %}{{ page.data.updated | dateToZulu }}{%else%}{{ page.date | dateToZulu }}{%endif%}</lastmod>
+            <loc>{{ meta.siteBaseUrl }}{{ url }}</loc>
+            <lastmod>{% if page.data.updated %}{{ page.data.updated | dateToZulu }}{% else %}{{ page.date | dateToZulu }}{% endif %}</lastmod>
+            {% if url == "/" %}
+            <changefreq>daily</changefreq>
+            <priority>1.0</priority>
+            {% elif "/notes/" in url %}
+            <changefreq>weekly</changefreq>
+            <priority>0.7</priority>
+            {% else %}
+            <changefreq>monthly</changefreq>
+            <priority>0.5</priority>
+            {% endif %}
         </url>
+        {% endif %}
     {% endfor %}
 </urlset>

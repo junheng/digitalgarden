@@ -1,0 +1,10 @@
+{# Base SEO: canonical URL, robots directive, Open Graph site identity, Twitter Card #}
+<link rel="canonical" href="{{ meta.siteBaseUrl }}{{ page.url | url }}">
+<meta name="robots" content="index, follow">
+
+{% if meta.siteName %}
+<meta property="og:site_name" content="{{ meta.siteName }}">
+{% endif %}
+<meta property="og:url" content="{{ meta.siteBaseUrl }}{{ page.url | url }}">
+<meta property="og:locale" content="{{ meta.mainLanguage | default('zh') }}_CN">
+<meta name="twitter:card" content="summary">
