@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"dg-path":"wt — Git Worktree 上下文秒切工具.md","permalink":"/wt — Git Worktree 上下文秒切工具/","tags":["type/article","area/ai","tech/git","tech/tooling"],"created":"2026-05-26T09:56:54.580+08:00","updated":"2026-05-26T09:56:54.581+08:00","dg-note-properties":{"tags":["type/article","area/ai","tech/git","tech/tooling"],"created":"2026-05-26","updated":"2026-05-26","description":"wt：一行命令创建 git worktree 并启动 AI 工具，多项目并行零上下文切换成本。附带完整脚本和 Agent 实施指南。"}}
+{"dg-publish":true,"dg-path":"wt — Git Worktree 上下文秒切工具.md","permalink":"/wt — Git Worktree 上下文秒切工具/","tags":["type/article","area/ai","tech/git","tech/tooling"],"created":"2026-05-26T09:56:54.580+08:00","updated":"2026-05-26T10:12:12.348+08:00","dg-note-properties":{"tags":["type/article","area/ai","tech/git","tech/tooling"],"created":"2026-05-26","updated":"2026-05-26T10:00","description":"wt：一行命令创建 git worktree 并启动 AI 工具，多项目并行零上下文切换成本。附带完整脚本和 Agent 实施指南。"}}
 ---
 
 
@@ -176,25 +176,37 @@ done
 if [[ "$mode" == "list" ]]; then
     echo "Worktrees in $WORKTREE_BASE:"
     if [[ -d "$WORKTREE_BASE" ]]; then
-        found=
-        for repo_d in "$WORKTREE_BASE"/*/; do
-            [[ -d "$repo_d" ]] || continue
-            repo=$(basename "$repo_d")
-            echo ""
-            echo "  [$repo]"
-            for wt_d in "$repo_d"*/; do
-                [[ -d "$wt_d" ]] || continue
-                br=$(basename "$wt_d")
-                if git -C "$wt_d" rev-parse --git-dir &>/dev/null 2>&1; then
-                    active=$(git -C "$wt_d" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "?")
-                    echo "    $br  →  $active"
-                else
-                    echo "    $br  →  (not a worktree)"
+        items=()
+        while IFS= read -r -d '' gitfile; do
+            wt_dir=$(dirname "$gitfile")
+            rel="${wt_dir#$WORKTREE_BASE/}"
+            repo="${rel%%/*}"
+            branch="${rel#$repo/}"
+
+            if git -C "$wt_dir" rev-parse --git-dir &>/dev/null 2>&1; then
+                active=$(git -C "$wt_dir" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "?")
+            else
+                active="(not a worktree)"
+            fi
+            items+=("$repo" "$branch" "$active")
+        done < <(find "$WORKTREE_BASE" -maxdepth 6 -name '.git' -type f -print0 2>/dev/null)
+
+        if [[ ${#items[@]} -gt 0 ]]; then
+            last_repo=""
+            for ((i=0; i<${#items[@]}; i+=3)); do
+                repo="${items[i]}"
+                branch="${items[i+1]}"
+                active="${items[i+2]}"
+                if [[ "$repo" != "$last_repo" ]]; then
+                    echo ""
+                    echo "  [$repo]"
+                    last_repo="$repo"
                 fi
-                found=1
+                echo "    $branch  →  $active"
             done
-        done
-        [[ -n "$found" ]] || echo "  (empty)"
+        else
+            echo "  (empty)"
+        fi
     else
         echo "  (no worktrees yet)"
     fi
@@ -219,9 +231,14 @@ if [[ $# -gt 0 ]]; then
 fi
 
 # ── Resolve repo and build wt_dir path ─────────────────────────────
+# delete mode: name can be "repo/branch" (explicit) or just "branch" (current repo)
+# enter mode: always "branch" under current repo
+
 if [[ "$mode" == "delete" ]] && [[ "$name" == */* ]]; then
+    # Explicit repo/branch — no git repo needed
     wt_dir="$WORKTREE_BASE/$name"
 else
+    # Auto-detect repo from current directory
     repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || {
         echo "wt: not in a git repository (use <repo>/<branch> for delete)" >&2
         exit 1
@@ -240,12 +257,18 @@ if [[ "$mode" == "delete" ]]; then
     $force && remove_args+=(--force)
     git worktree remove "${remove_args[@]}" "$wt_dir"
     echo "Removed worktree: $name (branch preserved)"
-    rmdir "$(dirname "$wt_dir")" 2>/dev/null || true
+    # Clean up empty ancestor directories (handle branch names like feat/xxxxx)
+    d=$(dirname "$wt_dir")
+    while [[ "$d" != "$WORKTREE_BASE" ]] && [[ "$d" != "/" ]]; do
+        rmdir "$d" 2>/dev/null || break
+        d=$(dirname "$d")
+    done
     rmdir "$WORKTREE_BASE" 2>/dev/null || true
     exit 0
 fi
 
 # ── Enter mode ────────────────────────────────────────────────────
+# Determine base ref
 base="${WT_DEFAULT_BASE:-}"
 if [[ -z "$base" ]]; then
     for candidate in main master; do
