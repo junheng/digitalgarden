@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"dg-path":"wt — Git Worktree 上下文秒切工具.md","permalink":"/wt — Git Worktree 上下文秒切工具/","tags":["type/article","area/ai","tech/git","tech/tooling"],"created":"2026-05-26T09:56:54.580+08:00","updated":"2026-05-26T10:12:12.348+08:00","dg-note-properties":{"tags":["type/article","area/ai","tech/git","tech/tooling"],"created":"2026-05-26","updated":"2026-05-26T10:00","description":"wt：一行命令创建 git worktree 并启动 AI 工具，多项目并行零上下文切换成本。附带完整脚本和 Agent 实施指南。"}}
+{"dg-publish":true,"dg-path":"wt — Git Worktree 上下文秒切工具.md","permalink":"/wt — Git Worktree 上下文秒切工具/","tags":["type/article","area/ai","tech/git","tech/tooling"],"created":"2026-06-11T15:36:54.393+08:00","updated":"2026-06-11T15:36:54.404+08:00","dg-note-properties":{"tags":["type/article","area/ai","tech/git","tech/tooling"],"created":"2026-05-26","updated":"2026-06-11T14:30","description":"wt：一行命令创建 git worktree 并启动 AI 工具，多项目并行零上下文切换成本。附带完整脚本和 Agent 实施指南。"}}
 ---
 
 
@@ -122,188 +122,9 @@ wt -d hotfix/button-style
 
 ## 附件：完整脚本
 
-```bash
-#!/usr/bin/env bash
-# wt — git worktree launcher: create/enter worktree and launch your AI tool
-#
-# Usage:
-#   wt <name> [tool] [args...]    Create/enter worktree, launch tool
-#   wt -d|--delete <name>         Remove worktree (keeps branch)
-#   wt -f -d <name>               Force-remove worktree
-#   wt -l|--list                  List all worktrees, grouped by repo
-#   wt -h|--help                  Show help
-#
-# Tools: codex, claude (cc→claude), kiro, or any command
-# No tool → spawns a shell in the worktree.
-#
-# Path layout:  $WT_BASE/<repo-name>/<branch-name>
-#   e.g. ~/.worktrees/Core/feature/payment-v2
-#        ~/.worktrees/api-server/hotfix/login-bug
-#
-# Environment:
-#   WT_BASE          worktree root (default: ~/.worktrees)
-#   WT_DEFAULT_BASE  base branch   (default: auto-detect main→master→HEAD)
-
-set -euo pipefail
-
-WORKTREE_BASE="${WT_BASE:-$HOME/.worktrees}"
-
-usage() {
-    sed -n '2,17p' "$0"
-    exit 0
-}
-
-# Tool aliases
-declare -A TOOL_MAP=([cc]=claude)
-
-# ── Parse flags (only before <name>) ──────────────────────────────
-mode=enter
-force=false
-
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        -d|--delete) mode=delete; shift ;;
-        -l|--list)   mode=list;   shift ;;
-        -f|--force)  force=true;  shift ;;
-        -h|--help)   usage ;;
-        --) shift; break ;;
-        -*) echo "Unknown flag: $1"; usage ;;
-        *)  break ;;
-    esac
-done
-
-# ── List mode ─────────────────────────────────────────────────────
-if [[ "$mode" == "list" ]]; then
-    echo "Worktrees in $WORKTREE_BASE:"
-    if [[ -d "$WORKTREE_BASE" ]]; then
-        items=()
-        while IFS= read -r -d '' gitfile; do
-            wt_dir=$(dirname "$gitfile")
-            rel="${wt_dir#$WORKTREE_BASE/}"
-            repo="${rel%%/*}"
-            branch="${rel#$repo/}"
-
-            if git -C "$wt_dir" rev-parse --git-dir &>/dev/null 2>&1; then
-                active=$(git -C "$wt_dir" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "?")
-            else
-                active="(not a worktree)"
-            fi
-            items+=("$repo" "$branch" "$active")
-        done < <(find "$WORKTREE_BASE" -maxdepth 6 -name '.git' -type f -print0 2>/dev/null)
-
-        if [[ ${#items[@]} -gt 0 ]]; then
-            last_repo=""
-            for ((i=0; i<${#items[@]}; i+=3)); do
-                repo="${items[i]}"
-                branch="${items[i+1]}"
-                active="${items[i+2]}"
-                if [[ "$repo" != "$last_repo" ]]; then
-                    echo ""
-                    echo "  [$repo]"
-                    last_repo="$repo"
-                fi
-                echo "    $branch  →  $active"
-            done
-        else
-            echo "  (empty)"
-        fi
-    else
-        echo "  (no worktrees yet)"
-    fi
-    echo ""
-    exit 0
-fi
-
-# ── Need a name ───────────────────────────────────────────────────
-if [[ $# -lt 1 ]]; then
-    usage
-fi
-
-name="$1"; shift
-
-# Resolve tool
-tool=""
-tool_args=()
-if [[ $# -gt 0 ]]; then
-    raw="$1"; shift
-    tool="${TOOL_MAP[$raw]:-$raw}"
-    tool_args=("$@")
-fi
-
-# ── Resolve repo and build wt_dir path ─────────────────────────────
-# delete mode: name can be "repo/branch" (explicit) or just "branch" (current repo)
-# enter mode: always "branch" under current repo
-
-if [[ "$mode" == "delete" ]] && [[ "$name" == */* ]]; then
-    # Explicit repo/branch — no git repo needed
-    wt_dir="$WORKTREE_BASE/$name"
-else
-    # Auto-detect repo from current directory
-    repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || {
-        echo "wt: not in a git repository (use <repo>/<branch> for delete)" >&2
-        exit 1
-    }
-    repo_name=$(basename "$repo_root")
-    wt_dir="$WORKTREE_BASE/$repo_name/$name"
-fi
-
-# ── Delete mode ───────────────────────────────────────────────────
-if [[ "$mode" == "delete" ]]; then
-    if [[ ! -d "$wt_dir" ]]; then
-        echo "wt: worktree not found: $wt_dir" >&2
-        exit 1
-    fi
-    remove_args=()
-    $force && remove_args+=(--force)
-    git worktree remove "${remove_args[@]}" "$wt_dir"
-    echo "Removed worktree: $name (branch preserved)"
-    # Clean up empty ancestor directories (handle branch names like feat/xxxxx)
-    d=$(dirname "$wt_dir")
-    while [[ "$d" != "$WORKTREE_BASE" ]] && [[ "$d" != "/" ]]; do
-        rmdir "$d" 2>/dev/null || break
-        d=$(dirname "$d")
-    done
-    rmdir "$WORKTREE_BASE" 2>/dev/null || true
-    exit 0
-fi
-
-# ── Enter mode ────────────────────────────────────────────────────
-# Determine base ref
-base="${WT_DEFAULT_BASE:-}"
-if [[ -z "$base" ]]; then
-    for candidate in main master; do
-        if git -C "$repo_root" show-ref --verify --quiet "refs/heads/$candidate"; then
-            base="$candidate"
-            break
-        fi
-    done
-    [[ -n "$base" ]] || base=HEAD
-fi
-
-if [[ -d "$wt_dir" ]]; then
-    echo "→ worktree exists: $wt_dir"
-else
-    mkdir -p "$(dirname "$wt_dir")"
-
-    if git -C "$repo_root" show-ref --verify --quiet "refs/heads/$name"; then
-        echo "→ branch '$name' exists, adding worktree..."
-        git -C "$repo_root" worktree add "$wt_dir" "$name"
-    else
-        echo "→ new branch '$name' from '$base', adding worktree..."
-        git -C "$repo_root" worktree add -b "$name" "$wt_dir" "$base"
-    fi
-fi
-
-cd "$wt_dir"
-
-if [[ -z "$tool" ]]; then
-    exec "$SHELL"
-else
-    exec "$tool" "${tool_args[@]}"
-fi
-```
-
-将此脚本保存为 `~/.local/bin/wt`，`chmod +x` 即可使用。确保 `~/.local/bin` 在 `PATH` 中。
+> 脚本持续迭代中，文章内不再嵌入代码。最新版本见附件：[[attachments/wt.sh.attachment]] — 右键下载后 `mv wt.sh.attachment ~/.local/bin/wt && chmod +x ~/.local/bin/wt` 即可使用。确保 `~/.local/bin` 在 `PATH` 中。
+>
+> **不建议在文章中直接嵌入可执行脚本**。问题有三：(1) 代码演进而文章冻结，嵌入版本迅速过时；(2) 大段代码破坏文章阅读节奏，读者被迫跳过 200 行才到下一步；(3) 复制粘贴的代码没有可执行性保障。将脚本作为 `.sh.attachment` 附件引用，既保文章轻量，又保附件始终指向最新版本。
 
 ## Agent 实施指南
 
@@ -311,16 +132,16 @@ fi
 
 ---
 
-请帮我安装一个名为 `wt` 的 CLI 工具。它的完整脚本在本文的「附件」章节中，功能说明在「wt 的设计」章节中。请：
+请帮我安装一个名为 `wt` 的 CLI 工具。它的脚本在附件文件 `wt.sh.attachment` 中，功能说明在「wt 的设计」章节中。请：
 
-1. 将脚本写入 `~/.local/bin/wt`，确保内容与附件完全一致
+1. 从附件 [[attachments/wt.sh.attachment]] 获取脚本内容，写入 `~/.local/bin/wt`
 2. `chmod +x ~/.local/bin/wt`
 3. 检查 `~/.local/bin` 是否在 `PATH` 中，如果不在则添加到 `~/.bashrc`（或对应的 shell 配置文件）
 4. 执行 `wt --help` 验证安装成功
 5. 在一个 git 仓库中测试 `wt -l` 确认无报错
 
 附加配置（可选）：
-- 如果你使用的 AI 工具不在 `TOOL_MAP` 中（当前支持 codex / claude / cc / kiro），添加对应别名
+- 脚本支持 `codex`、`claude`（`cc` 自动映射为 `claude`）、`kiro` 及任意 PATH 中的命令。如果你常用的 AI 工具是 `~/.bashrc` 中定义的 bash 函数（如 `codexd`、`gemini`），脚本已支持自动提取
 - 如果希望 worktree 存放在其他位置，在 `~/.bashrc` 中设置 `export WT_BASE=~/your/path`
 - 如果默认基准分支不是 main/master，设置 `export WT_DEFAULT_BASE=develop`
 

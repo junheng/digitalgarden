@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"dg-path":"Diff 式阅读 — Zettelkasten 作为认知基线而非输出容器.md","permalink":"/Diff 式阅读 — Zettelkasten 作为认知基线而非输出容器/","tags":["type/article","area/ai"],"created":"2026-05-27T11:54:03.013+08:00","updated":"2026-05-27T11:54:03.356+08:00","dg-note-properties":{"tags":["type/article","area/ai"],"created":"2026-05-27","description":"翻转 Zettelkasten 的使用方向：从读后加工的输出容器，变成读前 diff 的认知基线。阅读效率从 O(全部) 降为 O(增量)。","source_notes":["06 - Zettelkasten/Diff 式阅读 — Zettelkasten 作为认知基线而非输出容器.md"]}}
+{"dg-publish":true,"dg-path":"Diff 式阅读 — Zettelkasten 作为认知基线而非输出容器.md","permalink":"/Diff 式阅读 — Zettelkasten 作为认知基线而非输出容器/","tags":["type/article","area/ai"],"created":"2026-06-02T10:09:03.718+08:00","updated":"2026-06-02T10:09:03.719+08:00","dg-note-properties":{"tags":["type/article","area/ai"],"created":"2026-05-27","description":"翻转 Zettelkasten 的使用方向：从读后加工的输出容器，变成读前 diff 的认知基线。阅读效率从 O(全部) 降为 O(增量)。","source_notes":["06 - Zettelkasten/Diff 式阅读 — Zettelkasten 作为认知基线而非输出容器.md"]}}
 ---
 
 

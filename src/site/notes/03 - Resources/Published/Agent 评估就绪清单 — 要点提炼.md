@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"dg-path":"Agent 评估就绪清单 — 要点提炼.md","permalink":"/Agent 评估就绪清单 — 要点提炼/","tags":["type/article","area/ai"],"created":"2026-03-28T17:28:11.784+08:00","updated":"2026-03-28T17:28:12.105+08:00","dg-note-properties":{"tags":["type/article","area/ai"],"created":"2026-03-28","source":"https://blog.langchain.com/agent-evaluation-readiness-checklist/","description":"LangChain 的 Agent 评估就绪清单要点提炼：从 error analysis 到飞轮机制，覆盖构建 eval 前的准备、评估层级选择、数据集构建、Grader 设计、运行迭代和生产就绪六个阶段。"}}
+{"dg-publish":true,"dg-path":"Agent 评估就绪清单 — 要点提炼.md","permalink":"/Agent 评估就绪清单 — 要点提炼/","tags":["type/article","area/ai"],"created":"2026-06-02T10:09:03.708+08:00","updated":"2026-06-02T10:09:03.711+08:00","dg-note-properties":{"tags":["type/article","area/ai"],"created":"2026-03-28","source":"https://blog.langchain.com/agent-evaluation-readiness-checklist/","description":"LangChain 的 Agent 评估就绪清单要点提炼：从 error analysis 到飞轮机制，覆盖构建 eval 前的准备、评估层级选择、数据集构建、Grader 设计、运行迭代和生产就绪六个阶段。"}}
 ---
 
 

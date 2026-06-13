@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"dg-path":"Agent 时代团队不需要更多执行者.md","permalink":"/Agent 时代团队不需要更多执行者/","tags":["type/article","area/management","area/ai"],"created":"2026-04-30T09:56:41.634+08:00","updated":"2026-04-30T10:07:52.725+08:00","dg-note-properties":{"tags":["type/article","area/management","area/ai"],"created":"2026-04-30","updated":"2026-04-30","description":"Agent 不是在替代人，而是在替代不做判断的人。当执行成本趋近于零，判断力成为团队成员的唯一不可替代属性。","source_notes":["Agent 时代团队的最小准入标准是判断力而非执行力","管理者的 AI 效率陷阱 — 上下文优势制造的不公平比较","Agent 时代开发者的价值在架构不在代码","Agentic Engineering 是对 Vibe Coding 的专业化区分","AI 研究飞轮的四个角色"]}}
+{"dg-publish":true,"dg-path":"Agent 时代团队不需要更多执行者.md","permalink":"/Agent 时代团队不需要更多执行者/","tags":["type/article","area/management","area/ai"],"created":"2026-06-02T10:09:03.704+08:00","updated":"2026-06-02T10:09:03.706+08:00","dg-note-properties":{"tags":["type/article","area/management","area/ai"],"created":"2026-04-30","updated":"2026-04-30","description":"Agent 不是在替代人，而是在替代不做判断的人。当执行成本趋近于零，判断力成为团队成员的唯一不可替代属性。","source_notes":["Agent 时代团队的最小准入标准是判断力而非执行力","管理者的 AI 效率陷阱 — 上下文优势制造的不公平比较","Agent 时代开发者的价值在架构不在代码","Agentic Engineering 是对 Vibe Coding 的专业化区分","AI 研究飞轮的四个角色"]}}
 ---
 
 

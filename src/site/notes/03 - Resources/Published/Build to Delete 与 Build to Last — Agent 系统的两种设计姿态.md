@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"dg-path":"Build to Delete 与 Build to Last — Agent 系统的两种设计姿态.md","permalink":"/Build to Delete 与 Build to Last — Agent 系统的两种设计姿态/","tags":["type/article","area/ai","area/architecture"],"created":"2026-05-27T10:04:21.105+08:00","updated":"2026-05-27T10:04:21.617+08:00","dg-note-properties":{"tags":["type/article","area/ai","area/architecture"],"created":"2026-05-27","description":"Agent 系统的组件分两种：补偿模型思维缺陷的该拆，填补模型行动能力缺口的该留。混淆这两类组件是 Harness 设计中最昂贵的错误。"}}
+{"dg-publish":true,"dg-path":"Build to Delete 与 Build to Last — Agent 系统的两种设计姿态.md","permalink":"/Build to Delete 与 Build to Last — Agent 系统的两种设计姿态/","tags":["type/article","area/ai","area/architecture"],"created":"2026-06-02T10:09:03.714+08:00","updated":"2026-06-02T10:09:03.715+08:00","dg-note-properties":{"tags":["type/article","area/ai","area/architecture"],"created":"2026-05-27","description":"Agent 系统的组件分两种：补偿模型思维缺陷的该拆，填补模型行动能力缺口的该留。混淆这两类组件是 Harness 设计中最昂贵的错误。"}}
 ---
 
 

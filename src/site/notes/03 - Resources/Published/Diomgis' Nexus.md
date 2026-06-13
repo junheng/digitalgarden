@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"dg-path":"Diomgis' Nexus.md","permalink":"/Diomgis' Nexus/","pinned":true,"tags":["type/reference","gardenEntry"],"created":"2026-05-12T16:12:13.234+08:00","updated":"2026-05-12T16:12:13.235+08:00","dg-note-properties":{"tags":["type/reference","gardenEntry"]}}
+{"dg-publish":true,"dg-path":"Diomgis' Nexus.md","permalink":"/Diomgis' Nexus/","pinned":true,"tags":["type/reference","gardenEntry"],"created":"2026-06-02T10:09:03.722+08:00","updated":"2026-06-02T10:09:03.724+08:00","dg-note-properties":{"tags":["type/reference","gardenEntry"]}}
 ---
 
 
