@@ -5,6 +5,16 @@ const allSettings = settings.ALL_NOTE_SETTINGS;
 
 module.exports = {
   eleventyComputed: {
+    created: (data) => {
+      const props = data['dg-note-properties'];
+      if (props && props.created) return props.created;
+      return data.created;
+    },
+    updated: (data) => {
+      const props = data['dg-note-properties'];
+      if (props && props.updated) return props.updated;
+      return data.updated;
+    },
     layout: (data) => {
       if (data.tags.indexOf("gardenEntry") != -1) {
         return "layouts/index.njk";
