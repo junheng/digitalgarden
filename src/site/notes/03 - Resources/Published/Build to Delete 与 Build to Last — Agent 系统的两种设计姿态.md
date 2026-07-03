@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"dg-path":"Build to Delete 与 Build to Last — Agent 系统的两种设计姿态.md","permalink":"/Build to Delete 与 Build to Last — Agent 系统的两种设计姿态/","tags":["type/article","area/ai","area/architecture"],"created":"2026-06-02T10:09:03.714+08:00","updated":"2026-06-02T10:09:03.715+08:00","dg-note-properties":{"tags":["type/article","area/ai","area/architecture"],"created":"2026-05-27","description":"Agent 系统的组件分两种：补偿模型思维缺陷的该拆，填补模型行动能力缺口的该留。混淆这两类组件是 Harness 设计中最昂贵的错误。"}}
+{"dg-publish":true,"dg-path":"Build to Delete 与 Build to Last — Agent 系统的两种设计姿态.md","permalink":"/Build to Delete 与 Build to Last — Agent 系统的两种设计姿态/","tags":["type/article","area/ai","area/architecture"],"created":"2026-05-27","dg-note-properties":{"tags":["type/article","area/ai","area/architecture"],"created":"2026-05-27","description":"Agent 系统的组件分两种：补偿模型思维缺陷的该拆，填补模型行动能力缺口的该留。混淆这两类组件是 Harness 设计中最昂贵的错误。"}}
 ---
 
 
@@ -126,3 +126,4 @@ Build to Delete 和 Build to Last 不是对立的设计哲学。它们是同一�
 - Prithvi Rajasekaran, "Harness Design for Long-Running Apps" — Anthropic 多 Agent Harness 的 V1→V2 演进
 - Lance Martin, "Harnessing Claude's Intelligence" — "what can I stop doing" 的提问框架
 - Boris Cherny, "Why I'm Building Claude Code" — thin harness 哲学与实践
+- [[03 - Resources/Tech/GSStack 作为 Script-as-Pipeline 验证案例 — 深度分析\|GSStack 作为 Script-as-Pipeline 验证案例 — 深度分析]] — GSStack 的 50 个 skill 自然地分成了 Build to Delete (思维补偿 Prompt) 和 Build to Last (浏览器 daemon + 管线编排) 两类，是对本框架的实践验证

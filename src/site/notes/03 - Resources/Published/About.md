@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"dg-path":"About.md","permalink":"/About/","tags":["type/reference"],"created":"2026-06-02T10:09:03.701+08:00","updated":"2026-06-02T10:09:03.702+08:00","dg-note-properties":{"tags":["type/reference"],"created":"2026-05-12","description":"关于本网站及其作者：研究方向、技术理念、可协作领域。"}}
+{"dg-publish":true,"dg-path":"About.md","permalink":"/About/","tags":["type/reference"],"created":"2026-05-12","dg-note-properties":{"tags":["type/reference"],"created":"2026-05-12","description":"关于本网站及其作者：研究方向、技术理念、可协作领域。"}}
 ---
 
 

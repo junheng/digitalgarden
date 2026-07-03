@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"dg-path":"wt — Git Worktree 上下文秒切工具.md","permalink":"/wt — Git Worktree 上下文秒切工具/","tags":["type/article","area/ai","tech/git","tech/tooling"],"created":"2026-06-11T15:36:54.393+08:00","updated":"2026-06-11T15:36:54.404+08:00","dg-note-properties":{"tags":["type/article","area/ai","tech/git","tech/tooling"],"created":"2026-05-26","updated":"2026-06-11T14:30","description":"wt：一行命令创建 git worktree 并启动 AI 工具，多项目并行零上下文切换成本。附带完整脚本和 Agent 实施指南。"}}
+{"dg-publish":true,"dg-path":"wt — Git Worktree 上下文秒切工具.md","permalink":"/wt — Git Worktree 上下文秒切工具/","tags":["type/article","area/ai","tech/git","tech/tooling"],"created":"2026-05-26","updated":"2026-06-11T14:30","dg-note-properties":{"tags":["type/article","area/ai","tech/git","tech/tooling"],"created":"2026-05-26","updated":"2026-06-11T14:30","description":"wt：一行命令创建 git worktree 并启动 AI 工具，多项目并行零上下文切换成本。附带完整脚本和 Agent 实施指南。"}}
 ---
 
 

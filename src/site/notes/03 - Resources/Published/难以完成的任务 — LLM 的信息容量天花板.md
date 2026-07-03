@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"dg-path":"难以完成的任务 — LLM 的信息容量天花板.md","permalink":"/难以完成的任务 — LLM 的信息容量天花板/","tags":["type/article","area/ai","area/architecture"],"created":"2026-06-13T14:54:11.268+08:00","updated":"2026-06-13T14:54:11.270+08:00","dg-note-properties":{"tags":["type/article","area/ai","area/architecture"],"created":"2026-06-13","description":"有些任务 AI 就是难以一次完成——不是因为不够聪明，而是 LLM 的单次推理存在信息容量上限。理解这个物理约束，才能设计绕过它的策略。"}}
+{"dg-publish":true,"dg-path":"难以完成的任务 — LLM 的信息容量天花板.md","permalink":"/难以完成的任务 — LLM 的信息容量天花板/","tags":["type/article","area/ai","area/architecture"],"created":"2026-06-13","dg-note-properties":{"tags":["type/article","area/ai","area/architecture"],"created":"2026-06-13","description":"有些任务 AI 就是难以一次完成——不是因为不够聪明，而是 LLM 的单次推理存在信息容量上限。理解这个物理约束，才能设计绕过它的策略。"}}
 ---
 
 

@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"dg-path":"Script-as-Pipeline — Agent 管线中的脚本节点设计模式.md","permalink":"/Script-as-Pipeline — Agent 管线中的脚本节点设计模式/","tags":["type/article","area/ai","area/architecture"],"created":"2026-06-02T10:09:03.731+08:00","updated":"2026-06-02T10:09:03.733+08:00","dg-note-properties":{"tags":["type/article","area/ai","area/architecture"],"created":"2026-05-12","updated":"2026-05-12","description":"Agent 调用脚本时，stdout 不是日志——是动态生成的 prompt 片段。把脚本从工具升级为管线节点，是从「用 agent」到「设计 agent 系统」的标志。"}}
+{"dg-publish":true,"dg-path":"Script-as-Pipeline — Agent 管线中的脚本节点设计模式.md","permalink":"/Script-as-Pipeline — Agent 管线中的脚本节点设计模式/","tags":["type/article","area/ai","area/architecture"],"created":"2026-05-12","updated":"2026-05-12","dg-note-properties":{"tags":["type/article","area/ai","area/architecture"],"created":"2026-05-12","updated":"2026-05-12","description":"Agent 调用脚本时，stdout 不是日志——是动态生成的 prompt 片段。把脚本从工具升级为管线节点，是从「用 agent」到「设计 agent 系统」的标志。"}}
 ---
 
 
@@ -96,3 +96,4 @@ Script stdout 是**同步的、增量的上下文注入**。Agent 不停下，�
 - LangGraph StateGraph 文档 — ToolNode 与 conditional edge: https://langchain-ai.github.io/langgraph/
 - Boris Cherny, "Why I'm Building Claude Code" — thin harness 哲学
 - Prithvi Rajasekaran, "Build to Delete" — harness 组件的临时性
+- [[03 - Resources/Tech/GSStack 作为 Script-as-Pipeline 验证案例 — 深度分析\|GSStack 作为 Script-as-Pipeline 验证案例 — 深度分析]] — GSStack (Garry Tan 的 23 角色 Claude Code 技能包) 作为 Script-as-Pipeline 模式在大规模软件工程中的验证案例
