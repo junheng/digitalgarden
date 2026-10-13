@@ -7,6 +7,54 @@ body {
     --dg-filetree-min-width: 280px;
 }
 
+/* Mermaid only: preserve intrinsic diagram size and contain wide diagrams. */
+.markdown-preview-view pre.mermaid {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 16px;
+  overflow-x: auto;
+  background: var(--background-primary);
+  color: var(--text-normal);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  white-space: normal;
+
+  > svg {
+    display: block;
+    margin-inline: auto;
+    // The base theme inverts default Mermaid colors; these are already themed.
+    filter: none;
+  }
+
+  &[data-mermaid-scroll]::before {
+    content: "↔ 左右滚动查看完整图表";
+    position: sticky;
+    left: 0;
+    display: block;
+    width: fit-content;
+    margin: 0 auto 12px;
+    color: var(--text-muted);
+    font: 12px/1.5 var(--font-text, sans-serif);
+  }
+
+  .edgePath .path, .flowchart-link {
+    stroke: var(--text-accent) !important;
+  }
+
+  marker path {
+    fill: var(--text-accent) !important;
+    stroke: var(--text-accent) !important;
+  }
+
+  .edgeLabel, .edgeLabel p, .edgeLabel span, .labelBkg {
+    background: var(--background-primary) !important;
+    color: var(--text-normal) !important;
+    fill: var(--background-primary) !important;
+  }
+}
+
 /* === Freshness Warning Banner === */
 
 .freshness-banner {
