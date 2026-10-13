@@ -63,6 +63,7 @@ body {
 
 .mermaid-dialog {
   box-sizing: border-box;
+  margin: auto;
   width: min(1100px, calc(100vw - 32px));
   max-width: calc(100vw - 32px);
   max-height: calc(100dvh - 32px);
@@ -98,12 +99,17 @@ body {
   }
 
   .mermaid-detail {
+    display: flex;
+    flex-direction: column;
     min-height: 0;
     overflow: auto;
     padding: 16px;
 
     > svg {
       display: block;
+      // Auto margins center spare space and collapse to zero on overflow.
+      flex: none;
+      margin: auto;
       max-width: none !important;
       height: auto;
       filter: none;
