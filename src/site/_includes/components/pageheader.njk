@@ -62,21 +62,79 @@
             }
         });
         await mermaid.run({ nodes: diagrams });
-        const updateOverflow = () => diagrams.forEach(diagram => {
-            diagram.toggleAttribute('data-mermaid-scroll', diagram.scrollWidth > diagram.clientWidth + 1);
+        const dialog = document.createElement('dialog');
+        dialog.className = 'mermaid-dialog';
+        dialog.setAttribute('aria-label', '图表原尺寸查看');
+        const header = document.createElement('div');
+        header.className = 'mermaid-dialog-header';
+        const title = document.createElement('span');
+        title.textContent = '图表原尺寸查看';
+        const close = document.createElement('button');
+        close.type = 'button';
+        close.textContent = '关闭';
+        close.setAttribute('autofocus', '');
+        header.append(title, close);
+        const detail = document.createElement('div');
+        detail.className = 'mermaid-detail';
+        dialog.append(header, detail);
+        document.body.append(dialog);
+        let active = null;
+        const open = diagram => {
+            if (dialog.open || active) return;
+            const svg = diagram.querySelector('svg');
+            if (!svg) return;
+            const placeholder = document.createComment('Mermaid SVG position');
+            active = {
+                diagram, svg, placeholder,
+                height: diagram.style.height,
+                overflow: document.body.style.getPropertyValue('overflow'),
+                overflowPriority: document.body.style.getPropertyPriority('overflow')
+            };
+            diagram.style.height = `${diagram.getBoundingClientRect().height}px`;
+            svg.before(placeholder);
+            detail.append(svg);
+            diagram.setAttribute('aria-expanded', 'true');
+            document.body.style.setProperty('overflow', 'hidden');
+            dialog.showModal();
+            detail.scrollTo(0, 0);
+        };
+        close.addEventListener('click', () => dialog.close());
+        dialog.addEventListener('click', event => {
+            const rect = dialog.getBoundingClientRect();
+            if (event.target === dialog && (event.clientX < rect.left || event.clientX > rect.right ||
+                event.clientY < rect.top || event.clientY > rect.bottom)) dialog.close();
+        });
+        // Native Escape cancellation also dispatches close, sharing all cleanup.
+        dialog.addEventListener('close', () => {
+            if (!active) return;
+            const { diagram, svg, placeholder, height, overflow, overflowPriority } = active;
+            placeholder.replaceWith(svg);
+            diagram.style.height = height;
+            diagram.setAttribute('aria-expanded', 'false');
+            if (overflow) document.body.style.setProperty('overflow', overflow, overflowPriority);
+            else document.body.style.removeProperty('overflow');
+            active = null;
+            diagram.focus({ preventScroll: true });
         });
         diagrams.forEach(diagram => {
             const svg = diagram.querySelector('svg');
-            if (svg?.viewBox.baseVal.width) {
-                svg.style.width = `${svg.viewBox.baseVal.width}px`;
-                svg.style.maxWidth = 'none';
-                svg.style.height = 'auto';
-            }
+            if (!svg?.viewBox.baseVal.width) return;
+            svg.style.width = `${svg.viewBox.baseVal.width}px`;
+            svg.style.maxWidth = '100%';
+            svg.style.height = 'auto';
             diagram.setAttribute('tabindex', '0');
-            diagram.setAttribute('aria-label', '图表；宽图可左右滚动查看');
+            diagram.setAttribute('role', 'button');
+            diagram.setAttribute('aria-label', '图表；点击放大');
+            diagram.setAttribute('aria-haspopup', 'dialog');
+            diagram.setAttribute('aria-expanded', 'false');
+            diagram.addEventListener('click', () => open(diagram));
+            diagram.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    if (!event.repeat) open(diagram);
+                }
+            });
         });
-        new ResizeObserver(updateOverflow).observe(document.querySelector('main') || document.body);
-        updateOverflow();
     }
 </script>
 <script async src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js" integrity="sha512-hpZ5pDCF2bRCweL5WoA0/N1elet1KYL5mx3LP555Eg/0ZguaHawxNvEjF6O3rufAChs16HVNhEc6blF/rZoowQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

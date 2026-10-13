@@ -7,14 +7,15 @@ body {
     --dg-filetree-min-width: 280px;
 }
 
-/* Mermaid only: preserve intrinsic diagram size and contain wide diagrams. */
+/* Mermaid only: fit to the content box without enlarging narrow diagrams. */
 .markdown-preview-view pre.mermaid {
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
   min-width: 0;
   padding: 16px;
-  overflow-x: auto;
+  overflow: visible;
+  cursor: zoom-in;
   background: var(--background-primary);
   color: var(--text-normal);
   border: 1px solid var(--background-modifier-border);
@@ -28,10 +29,8 @@ body {
     filter: none;
   }
 
-  &[data-mermaid-scroll]::before {
-    content: "↔ 左右滚动查看完整图表";
-    position: sticky;
-    left: 0;
+  &[role="button"]::before {
+    content: "点击放大";
     display: block;
     width: fit-content;
     margin: 0 auto 12px;
@@ -39,6 +38,13 @@ body {
     font: 12px/1.5 var(--font-text, sans-serif);
   }
 
+  &:focus-visible {
+    outline: 2px solid var(--text-accent);
+    outline-offset: 2px;
+  }
+}
+
+.markdown-preview-view pre.mermaid, .mermaid-dialog .mermaid-detail {
   .edgePath .path, .flowchart-link {
     stroke: var(--text-accent) !important;
   }
@@ -52,6 +58,56 @@ body {
     background: var(--background-primary) !important;
     color: var(--text-normal) !important;
     fill: var(--background-primary) !important;
+  }
+}
+
+.mermaid-dialog {
+  box-sizing: border-box;
+  width: min(1100px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  background: var(--background-primary);
+  color: var(--text-normal);
+
+  &[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &::backdrop { background: rgba(0, 0, 0, 0.75); }
+
+  .mermaid-dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--background-modifier-border);
+
+    button {
+      margin: 0;
+      min-height: 44px;
+      color: var(--text-normal);
+      background: var(--background-secondary);
+      cursor: pointer;
+    }
+  }
+
+  .mermaid-detail {
+    min-height: 0;
+    overflow: auto;
+    padding: 16px;
+
+    > svg {
+      display: block;
+      max-width: none !important;
+      height: auto;
+      filter: none;
+    }
   }
 }
 
