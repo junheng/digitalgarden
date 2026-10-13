@@ -1,6 +1,7 @@
 ---
-{"dg-publish": true, "dg-path": "Agent 应用指南/03 - Agent 为什么失效.md", "permalink": "/Agent 应用指南/03 - Agent 为什么失效/", "title": "Agent 应用指南（三）：它为什么会失效，以及先查哪里", "tags": ["type/article", "area/ai"], "created": "2026-10-12", "updated": "2026-10-12", "description": "从客户反馈助手的具体失败出发，区分任务、资料、工具、模型、状态、权限和评估问题，避免用加 Prompt 和换模型修复一切。", "dg-note-properties": {"title": "Agent 应用指南（三）：它为什么会失效，以及先查哪里", "created": "2026-10-12", "date": "2026-10-12", "updated": "2026-10-12", "tags": ["type/article", "area/ai"], "description": "从客户反馈助手的具体失败出发，区分任务、资料、工具、模型、状态、权限和评估问题，避免用加 Prompt 和换模型修复一切。", "editorial_status": "待审草稿"}}
+{"dg-publish":true,"dg-path":"Agent 应用指南/03 - Agent 为什么失效.md","permalink":"/Agent 应用指南/03 - Agent 为什么失效/","title":"Agent 应用指南（三）：它为什么会失效，以及先查哪里","tags":["type/article","area/ai"],"created":"2026-10-12","updated":"2026-10-13","dg-note-properties":{"title":"Agent 应用指南（三）：它为什么会失效，以及先查哪里","created":"2026-10-12","date":"2026-10-12","updated":"2026-10-13","tags":["type/article","area/ai"],"description":"从客户反馈助手的具体失败出发，区分任务、资料、工具、模型、状态、权限和评估问题，避免用加 Prompt 和换模型修复一切。","editorial_status":"待发布"}}
 ---
+
 
 同一句需求，Agent 昨天处理得不错，今天却生成了重复工单。第一反应往往是：“模型不稳定，再加一句禁止重复。”
 
@@ -10,24 +11,22 @@
 
 本文继续使用客户反馈助手：查资料、出工单草稿，用户确认后创建。下面都是故障教学示例，不是线上事故报告。
 
-先看一个排查方向图。它不是要求按图机械地走完所有分支，而是避免把所有问题都归到“模型不行”。
+案例中的 F-101/F-102 是桌面版 2.4 导出 E42 的相似反馈，T-217 是已有的相似工单；F-103 是排序功能建议。只生成草稿时不得写入；T-304 则出现在用户明确批准 F-103 新建后的另一条教学分支中。
+
+先看一条简短的排查路线。每到一步，对照实际证据判断；发现偏离就优先检查这一环节，不是机械地走完清单，也不把所有问题都归到“模型不行”。
 
 ```mermaid
 flowchart TD
-    A["发现输出错误或异常动作"] --> B{"验收目标说清楚了？"}
-    B -->|否| B1["修任务定义与正确结果示例"]
-    B -->|是| C{"资料范围与内容可靠？"}
-    C -->|否| C1["修数据来源、分页与覆盖检查"]
-    C -->|是| D{"工具参数与实际执行正确？"}
-    D -->|否| D1["修接口、身份、错误与返回约定"]
-    D -->|是| E{"授权与任务状态一致？"}
-    E -->|否| E1["修确认绑定、权限与恢复逻辑"]
-    E -->|是| F{"必要信息进入本次上下文？"}
-    F -->|否| F1["修检索、摘要与技能路由"]
-    F -->|是| G["复核评判器，再测试模型或编排调整"]
+    A["1. 核对验收目标"] --> B["2. 核对资料与覆盖"]
+    B --> C["3. 核对工具与执行"]
+    C --> D["4. 核对上下文"]
+    D --> E["5. 核对状态与授权"]
+    E --> F["6. 检查评判器"]
+    F --> G["7. 测试模型或编排调整"]
+    linkStyle default stroke:#555,stroke-width:2px;
 ```
 
-**图 5：先找最早偏离预期的环节，再选修复手段。** 涉及越权或泄露时，先停止危险操作；根因排查不能成为继续执行的理由。
+**图 5：先找最早偏离预期的环节，再选修复手段。** 发现范围不全就查数据与分页，参数不对就查工具；前面的环节都核实后，再比较模型或编排调整。评判器就是判断任务是否通过的检查逻辑，它本身也可能误判。涉及越权或泄露时，先停止危险操作；根因排查不能成为继续执行的理由。
 
 ## 1. 三种失败，不能混成一个分数
 
@@ -111,7 +110,9 @@ flowchart TD
 
 ### 最小修复
 
-把关键目标字段显式设定；返回可读回的记录标识；区分“接受请求”和“完成操作”；执行后核对目标。[1]
+官方工具实践支持清晰的接口职责和可解释的返回信息。[1] Anthropic 的评估文章则把实际结果（outcome）定义为运行结束时环境中的最终状态，而不只是 Agent 的成功自述。[5]
+
+针对本例，我建议把关键目标字段显式设定，返回可读回的记录标识，区分“接受请求”和“完成操作”，并在执行后核对目标。这些是本文对工单业务的设计细化，不是上述来源规定的统一接口协议。
 
 接口超时尤其危险：不能直接假定“没写进去”。先确认实际状态，再按幂等规则处理。
 
@@ -175,7 +176,9 @@ flowchart TD
 
 ### 最小修复
 
-保存动作与回执，确认绑定目标和版本；恢复先核对外部状态；状态未知时停在待核对，不自动重放写操作。[3]
+长任务实践支持保存进度、留下可恢复的记录，并在恢复后验证环境。[3] 这不保证外部写入天然只发生一次。
+
+针对本例，我建议保存动作与回执，把确认绑定到具体目标和草稿版本；恢复时先核对外部状态，状态未知就停在待核对，不自动重放写操作。这是有副作用业务的恢复建议，不是长任务文章提供的通用事务协议。
 
 文件恢复或代码回滚，也不能自动撤销已经发出的消息、创建的订单或其他外部副作用。
 
@@ -254,10 +257,14 @@ flowchart TD
 
 ## 来源与边界
 
-- [1] Anthropic，**Writing effective tools for agents — with agents**，工具设计与评估；OpenAI，**A practical guide to building agents**，工具与护栏。https://www.anthropic.com/engineering/writing-tools-for-agents ；https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf
+- [1] Anthropic，**Writing effective tools for agents — with agents**，**How to write tools**。支持清晰职责、参数与返回信息；本文的工单记录标识和异步状态约定属于应用设计。https://www.anthropic.com/engineering/writing-tools-for-agents
 - [2] Anthropic，**Effective context engineering for AI agents**，**The anatomy of effective context**、**Context engineering for long-horizon tasks**。https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
-- [3] Anthropic，**Effective harnesses for long-running agents**，**Incremental progress**、**Testing**；**Scaling Managed Agents: Decoupling the brain from the hands**，**The session is not Claude’s context window**。支持保存进度和环境验证，不保证外部动作无损恢复。https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents ；https://www.anthropic.com/engineering/managed-agents
+- [3] Anthropic，**Effective harnesses for long-running agents**，**Incremental progress**、**Testing**；**Scaling Managed Agents: Decoupling the brain from the hands**，**The session is not Claude’s context window**。支持进度记录、恢复和环境验证；不保证外部动作无损恢复，也不直接规定确认版本绑定或禁止重放的业务协议。https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents ；https://www.anthropic.com/engineering/managed-agents
 - [4] OpenAI，**Safety in building agents**，**Types of risk**、**Don't use untrusted variables in developer messages**、**Combine techniques**。https://developers.openai.com/api/docs/guides/agent-builder-safety
-- [5] Anthropic，**Demystifying evals for AI agents**，**The structure of an evaluation**、**Step 5: Design graders thoughtfully**；LangChain，**Agent Evaluation Readiness Checklist**，**Rule out infrastructure and data pipeline issues before blaming the agent**、**Grader design**。https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents ；https://www.langchain.com/blog/agent-evaluation-readiness-checklist
+- [5] Anthropic，**Demystifying evals for AI agents**，**The structure of an evaluation** 对 outcome 的定义、**Step 5: Design graders thoughtfully**；LangChain，**Agent Evaluation Readiness Checklist**，**Rule out infrastructure and data pipeline issues before blaming the agent**、**Grader design**。https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents ；https://www.langchain.com/blog/agent-evaluation-readiness-checklist
 
 本文故障分类和排查顺序为应用层归纳，不是官方统一分类或统计分布；各症状都可能有多个原因，需要真实轨迹与复现支持。
+
+## 系列导航
+
+[系列入口](https://nexus.sigmoid.cc/Agent%20%E5%BA%94%E7%94%A8%E6%8C%87%E5%8D%97/00%20-%20Agent%20%E5%BA%94%E7%94%A8%E6%8C%87%E5%8D%97/) · 上一篇：[从一句需求到可验收的设计](https://nexus.sigmoid.cc/Agent%20%E5%BA%94%E7%94%A8%E6%8C%87%E5%8D%97/02%20-%20%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E5%A5%BD%E7%9A%84%20Agent/) · 下一篇：[怎样发现失效，并把它变成回归测试](https://nexus.sigmoid.cc/Agent%20%E5%BA%94%E7%94%A8%E6%8C%87%E5%8D%97/04%20-%20%E5%A6%82%E4%BD%95%E5%8F%91%E7%8E%B0%20Agent%20%E5%A4%B1%E6%95%88/)

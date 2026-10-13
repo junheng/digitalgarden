@@ -1,6 +1,7 @@
 ---
-{"dg-publish": true, "dg-path": "Agent 应用指南/01 - Agent 如何工作.md", "permalink": "/Agent 应用指南/01 - Agent 如何工作/", "title": "Agent 应用指南（一）：一项任务如何变成连续行动", "tags": ["type/article", "area/ai"], "created": "2026-10-12", "updated": "2026-10-12", "description": "用客户反馈转需求工单的案例，理解 Agent 的模型、工具、执行循环、上下文与状态，以及它和固定工作流的区别。", "dg-note-properties": {"title": "Agent 应用指南（一）：一项任务如何变成连续行动", "created": "2026-10-12", "date": "2026-10-12", "updated": "2026-10-12", "tags": ["type/article", "area/ai"], "description": "用客户反馈转需求工单的案例，理解 Agent 的模型、工具、执行循环、上下文与状态，以及它和固定工作流的区别。", "editorial_status": "待审草稿"}}
+{"dg-publish":true,"dg-path":"Agent 应用指南/01 - Agent 如何工作.md","permalink":"/Agent 应用指南/01 - Agent 如何工作/","title":"Agent 应用指南（一）：一项任务如何变成连续行动","tags":["type/article","area/ai"],"created":"2026-10-12","updated":"2026-10-13","dg-note-properties":{"title":"Agent 应用指南（一）：一项任务如何变成连续行动","created":"2026-10-12","date":"2026-10-12","updated":"2026-10-13","tags":["type/article","area/ai"],"description":"用客户反馈转需求工单的案例，理解 Agent 的模型、工具、执行循环、上下文与状态，以及它和固定工作流的区别。","editorial_status":"待发布"}}
 ---
+
 
 “把这批客户反馈整理一下，找出值得处理的问题，再建成需求工单。”
 
@@ -45,28 +46,20 @@
 
 ## 3. 一次任务如何运行
 
-典型的循环是：
+先看最核心的行动循环。图中只保留工具调用的主循环，交付、等待和停止情况放在图下解释：
 
 ```mermaid
 flowchart TD
-    A["用户提出任务"] --> B["运行层读取任务与状态"]
-    B --> G{"权限与预算允许继续？"}
-    G -->|否| H["停止并说明原因"]
-    G -->|是| C["模型选择下一步"]
-    C -->|请求工具| D{"运行层校验本次调用"}
-    D -->|通过| E["工具实际执行"]
-    D -->|拒绝| F["记录结果或错误反馈"]
-    E --> F
-    F --> B
-    C -->|需要补充或确认| I["等待用户"]
-    I -->|用户补充或确认| B
-    C -->|产物可交付| J{"验证产物与实际结果"}
-    J -->|通过| K["交付并结束"]
-    J -->|未通过且仍可修复| F
-    J -->|无法修复或需裁决| H
+    A["读取任务与状态"] --> B["模型选择下一步"]
+    B -->|需要工具| C["运行层校验调用"]
+    C -->|通过| D["执行工具，记录结果"]
+    D --> B
+    linkStyle default stroke:#555,stroke-width:2px;
 ```
 
-**图 1：模型可以选择路径，但每次工具调用仍由运行层检查。** 回到循环不等于无条件继续，权限、预算和停止条件每次都要有效。用户说“停止”时也不能再按旧计划发起下一次行动。
+**图 1：看结果，再决定下一步。** 工具返回的信息进入下一轮判断，不是预先写死一串调用。图中画的是仍需工具时的路径；模型也可以选择等待用户，或在满足条件后验证结果、交付并结束，而不是无限绕圈。
+
+这是一张主流程示意图，不是完整控制逻辑。每轮都要核对权限、预算和停止条件；工具校验被拒绝时不能执行，需要用户补充或确认时应等待。验证未通过且仍可修复时，带着失败证据继续判断；无法修复、需要裁决或用户说“停止”时，应停止相关动作并说明原因，不能再按旧计划发起调用。
 
 以下是一个简化的执行记录。它展示可观察的动作，不是模型内部完整思维过程。
 
@@ -139,7 +132,7 @@ flowchart TD
 - 路径随材料变化，但目标可验收：再考虑 Agent。
 - 连目标都没定义：先澄清需求，不要让 Agent 无限探索。
 
-Agent 的灵活性通常伴随更多延迟、费用和失败面。OpenAI 与 Anthropic 的指南都建议从简单可行的方案开始，而不是默认选择最复杂的编排。[1][2]
+Agent 的灵活性通常伴随更多延迟、费用和失败面。OpenAI 与 Anthropic 的指南都建议从简单可行的方案开始，而不是默认选择最复杂的编排，也就是安排模型和工具协同工作的方式。[1][2]
 
 ## 本篇小结
 
@@ -154,6 +147,10 @@ Agent 的灵活性通常伴随更多延迟、费用和失败面。OpenAI 与 Ant
 ## 来源与边界
 
 - [1] Anthropic，**Building effective agents**，章节 **What are agents?**、**When (and when not) to use agents**、**Agents**。原文区分预定义路径和模型主导执行，并强调来自环境的反馈。https://www.anthropic.com/engineering/building-effective-agents
-- [2] OpenAI，**A practical guide to building agents**，第 4 页 **What is an agent?**、第 5—6 页 **When should you build an agent?**。https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf
+- [2] OpenAI，**A practical guide to building agents**，第 4 页 **What is an agent?**、第 5—6 页 **When should you build an agent?**、第 13 页 **Orchestration**、第 16 页 **When to consider creating multiple agents**。https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf
 
-以上是工程指南的定义与建议，不是行业唯一术语标准。本文案例、流程图和任务拆分为教学设计；没有提供实测效果或推荐某个特定 SDK。
+以上是工程指南的定义与建议，不是行业唯一术语标准。本文案例、流程图和任务拆分为教学设计；没有提供实测效果或推荐某个特定的软件开发工具包（SDK）。
+
+## 系列导航
+
+[系列入口](https://nexus.sigmoid.cc/Agent%20%E5%BA%94%E7%94%A8%E6%8C%87%E5%8D%97/00%20-%20Agent%20%E5%BA%94%E7%94%A8%E6%8C%87%E5%8D%97/) · 下一篇：[从一句需求到可验收的设计](https://nexus.sigmoid.cc/Agent%20%E5%BA%94%E7%94%A8%E6%8C%87%E5%8D%97/02%20-%20%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E5%A5%BD%E7%9A%84%20Agent/)

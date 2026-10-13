@@ -1,12 +1,15 @@
 ---
-{"dg-publish": true, "dg-path": "Agent 应用指南/02 - 如何设计好的 Agent.md", "permalink": "/Agent 应用指南/02 - 如何设计好的 Agent/", "title": "Agent 应用指南（二）：从一句需求到可验收的设计", "tags": ["type/article", "area/ai"], "created": "2026-10-12", "updated": "2026-10-12", "description": "用客户反馈处理助手，逐步设计任务约定、工具、上下文、Skill、授权与停止条件，形成可交给开发和测试的工作纸。", "dg-note-properties": {"title": "Agent 应用指南（二）：从一句需求到可验收的设计", "created": "2026-10-12", "date": "2026-10-12", "updated": "2026-10-12", "tags": ["type/article", "area/ai"], "description": "用客户反馈处理助手，逐步设计任务约定、工具、上下文、Skill、授权与停止条件，形成可交给开发和测试的工作纸。", "editorial_status": "待审草稿"}}
+{"dg-publish":true,"dg-path":"Agent 应用指南/02 - 如何设计好的 Agent.md","permalink":"/Agent 应用指南/02 - 如何设计好的 Agent/","title":"Agent 应用指南（二）：从一句需求到可验收的设计","tags":["type/article","area/ai"],"created":"2026-10-12","updated":"2026-10-13","dg-note-properties":{"title":"Agent 应用指南（二）：从一句需求到可验收的设计","created":"2026-10-12","date":"2026-10-12","updated":"2026-10-13","tags":["type/article","area/ai"],"description":"用客户反馈处理助手，逐步设计任务约定、工具、上下文、Skill、授权与停止条件，形成可交给开发和测试的工作纸。","editorial_status":"待发布"}}
 ---
+
 
 “做一个可以处理客户反馈的 Agent”，不是完整的开发需求。
 
 它可能意味着总结，也可能意味着自动创建工单、设优先级、分派负责人，甚至回复客户。这些行为的成本与责任不同，不能用“智能处理”四个字带过去。
 
 本文继续使用客户反馈助手：读取指定反馈、查已有工单、生成候选草稿；具体工单得到用户确认后，才允许创建。案例与配置均为设计示意，不是已经运行的系统。
+
+贯穿案例里，F-101/F-102 是桌面版 2.4 导出出现 E42 的两条相似反馈，T-217 是已有的相似工单；F-103 则是导出列表按时间排序的建议。助手应先查重、保留缺项，不把这些材料直接变成已确认的故障或正式工单。
 
 ## 1. 先写任务约定，再选框架
 
@@ -20,40 +23,21 @@
 | 不可猜测 | 复现结果、受影响人数、负责人承诺、已确认优先级 |
 | 默认权限 | 读取指定集合、生成草稿；不能创建或修改正式记录 |
 | 执行授权 | 用户确认具体草稿与目标项目后才能创建 |
-| 完成条件 | 草稿有出处且无无依据字段；执行后目标记录与确认内容一致 |
+| 完成条件 | 草稿有出处且没有无依据的字段；执行后目标记录与确认内容一致 |
 | 停止条件 | 需要确认、权限不足、预算达到上限或重试耗尽 |
 
-“分析完成”“等人确认”“创建完成”“验证通过”是不同状态。界面和任务记录都应区分，而不是统一显示“完成”。
+“分析完成”“等人确认”“创建完成”“验证通过”是不同状态。界面和任务记录都应区分，而不是统一显示“完成”。下面只画正常完成时的主路径，变更和异常在图后解释。
 
 ```mermaid
-stateDiagram-v2
-    state "整理草稿" as Draft
-    state "等待具体确认" as Await
-    state "已授权版本与目标" as Authorized
-    state "执行写入" as Execute
-    state "执行结果未知" as Unknown
-    state "读回验证" as Verify
-    state "验证通过" as Done
-    state "停止或人工处理" as Stop
-    [*] --> Draft
-    Draft --> Await: 草稿就绪
-    Await --> Draft: 内容或目标变更
-    Await --> Authorized: 用户确认具体版本与项目
-    Await --> Stop: 用户取消
-    Authorized --> Draft: 确认失效或内容改变
-    Authorized --> Execute: 运行层校验通过
-    Execute --> Verify: 返回记录标识
-    Execute --> Unknown: 请求超时
-    Unknown --> Verify: 核实已经写入
-    Unknown --> Authorized: 证实未写入并允许重试
-    Unknown --> Stop: 无法核实
-    Verify --> Done: 目标与内容一致
-    Verify --> Stop: 不一致或需裁决
-    Done --> [*]
-    Stop --> [*]
+flowchart TD
+    A["整理草稿"] --> B["等待具体确认"]
+    B -->|用户确认版本与项目| C["校验授权，执行写入"]
+    C -->|返回记录标识| D["读回实际记录"]
+    D -->|目标与内容一致| E["验证通过"]
+    linkStyle default stroke:#555,stroke-width:2px;
 ```
 
-**图 3：草稿、授权、执行和验证是不同状态。** “超时”进入结果未知，而不是直接进入失败重试；修改已确认内容，需要重新确认。执行中的取消也不能自动撤销已经发生的写入。
+**图 3：草稿就绪，不等于已经创建；创建完成，也不等于验证通过。** 用户未确认时停在等待，确认失效或内容、目标改变时重新确认，运行层校验不通过时不得执行。超时进入“结果未知”，先核对而不是直接重试；无法核实或读回不一致时停止或请人处理。第三篇图 6 专门展开超时恢复。执行中的取消不能自动撤销已经发生的写入。
 
 ### 把约定写成可检查的输入输出
 
@@ -70,7 +54,7 @@ stateDiagram-v2
 
 如果用户随后说“确认新增”，仍要先处理与 T-217 疑似重复的问题，明确他批准的是补充原单还是创建新单。不能把一句笼统认可解释成所有写操作都获准。
 
-产品人员应主导目标与边界，开发人员负责把它们变成真实机制，测试人员把它们变成可重复的检查。三者应在开发之前对同一张约定表达成一致。
+产品人员应主导目标与边界，开发人员负责把它们变成真实机制，测试人员把它们变成可重复的检查。三者应在开发之前对同一份任务约定达成一致。
 
 ## 2. 先用一个 Agent，把一条路径跑完整
 
@@ -86,7 +70,7 @@ stateDiagram-v2
 
 ## 3. 工具设计要让错误难发生
 
-下面的名字只是接口职责示意，不是可运行 API：
+下面的名字只是应用程序接口（API）的职责示意，不是可以直接运行的实现：
 
 | 工具职责 | 应明确的输入 | 应返回的信息 |
 |---|---|---|
@@ -109,7 +93,7 @@ stateDiagram-v2
 
 创建请求超时，不等于创建失败。接口可能已经写入，只是回执丢了。
 
-应优先使用服务端支持的幂等机制：同一请求重试，不产生第二条记录。先查已有状态也是补救方法，但并发条件下，单纯“先查后写”并不保证不重复。
+应优先使用服务端支持的幂等机制，也就是让同一操作重复请求时不产生额外结果：同一建单请求重试，不产生第二条记录。先查已有状态也是补救方法，但并发条件下，单纯“先查后写”并不保证不重复。
 
 还应明确已有记录被其他人修改时怎么办：拒绝覆盖、提示冲突，还是在特定规则下合并。不能交给模型临时猜。
 
@@ -119,13 +103,13 @@ stateDiagram-v2
 
 一种实用分工是：
 
-| 内容 | 放在哪里 |
-|---|---|
-| 角色与始终适用的边界 | 简短的常驻指令 |
-| 本次目标、授权、已完成动作 | 任务状态 |
-| 反馈与原始证据 | 可检索资料；带来源标识 |
-| 同类工作的处理方法 | 按需加载的 Skill |
-| 密码、令牌 | 凭据系统，不放入工作说明 |
+| 内容            | 放在哪里         |
+| ------------- | ------------ |
+| 角色与始终适用的边界    | 简短的常驻指令      |
+| 本次目标、授权、已完成动作 | 任务状态         |
+| 反馈与原始证据       | 可检索资料；带来源标识  |
+| 同类工作的处理方法     | 按需加载的 Skill  |
+| 密码、令牌         | 凭据系统，不放入工作说明 |
 
 最小上下文不等于最短上下文。删掉必要的产品定义，会使模型误判；塞进大量无关文件，也会增加噪声和成本。[3]
 
@@ -222,7 +206,7 @@ flowchart TD
 
 ## 7. 开发前的交付清单
 
-现在可以把设计交给团队，而不是只交一段 Prompt：
+现在可以把设计交给团队，而不是只交一段提示词（Prompt）：
 
 1. 任务约定和状态定义；
 2. 工具输入、返回、错误与幂等约定；
@@ -238,10 +222,14 @@ flowchart TD
 
 - [1] OpenAI，**A practical guide to building agents**，第 11 页 **Configuring instructions**、第 16 页 **When to consider creating multiple agents**、第 24 页 **Guardrails**、第 31 页 **Plan for human intervention**。https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf
 - [2] Anthropic，**Writing effective tools for agents — with agents**，**What is a tool?** 与 **How to write tools** 及工具设计原则。支持清晰接口、返回信息与实际评估的方法；本文工具表为设计示意。https://www.anthropic.com/engineering/writing-tools-for-agents
-- [3] Anthropic，**Effective context engineering for AI agents**，**The anatomy of effective context**、**Context retrieval and agentic search**。https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
+- [3] Anthropic，**Effective context engineering for AI agents**，**The anatomy of effective context**、**Context retrieval and agentic search**、**Context engineering for long-horizon tasks → Structured note-taking**。https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
 - [4] Anthropic，**Equipping agents for the real world with Agent Skills**，**The anatomy of a skill**、**Developing and evaluating skills**。https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills
-- [5] OpenAI，**Build skills**，**How ChatGPT and Codex use skills**、**Best practices**；Agent Skills，**Specification**，**SKILL.md format**、**Progressive disclosure**。https://learn.chatgpt.com/docs/build-skills ；https://agentskills.io/specification
+- [5] OpenAI，**Build skills**，**How ChatGPT and Codex use skills**、**Best practices**；Agent Skills，**Specification**，**`SKILL.md` format**、**Progressive disclosure**。https://learn.chatgpt.com/docs/build-skills ；https://agentskills.io/specification
 - [6] OpenAI，**Testing Agent Skills Systematically with Evals**，§4 **Use a small, targeted prompt set to catch regressions early**。https://developers.openai.com/blog/eval-skills
 - [7] OpenAI，**Safety in building agents**，**Keep tool approvals on**、**Combine techniques**。本文引用安全方法，不推荐其正在弃用的产品界面作为长期默认方案。https://developers.openai.com/api/docs/guides/agent-builder-safety
 
 工具设计参考 [2]；任务表、目录示例和开发清单是本文的应用建议。本文不声称完成了连接器实现、权限验证或上线测试。
+
+## 系列导航
+
+[系列入口](https://nexus.sigmoid.cc/Agent%20%E5%BA%94%E7%94%A8%E6%8C%87%E5%8D%97/00%20-%20Agent%20%E5%BA%94%E7%94%A8%E6%8C%87%E5%8D%97/) · 上一篇：[一项任务如何变成连续行动](https://nexus.sigmoid.cc/Agent%20%E5%BA%94%E7%94%A8%E6%8C%87%E5%8D%97/01%20-%20Agent%20%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C/) · 下一篇：[它为什么会失效，以及先查哪里](https://nexus.sigmoid.cc/Agent%20%E5%BA%94%E7%94%A8%E6%8C%87%E5%8D%97/03%20-%20Agent%20%E4%B8%BA%E4%BB%80%E4%B9%88%E5%A4%B1%E6%95%88/)

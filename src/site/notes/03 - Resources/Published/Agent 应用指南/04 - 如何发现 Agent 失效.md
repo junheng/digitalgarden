@@ -1,6 +1,7 @@
 ---
-{"dg-publish": true, "dg-path": "Agent 应用指南/04 - 如何发现 Agent 失效.md", "permalink": "/Agent 应用指南/04 - 如何发现 Agent 失效/", "title": "Agent 应用指南（四）：怎样发现失效，并把它变成回归测试", "tags": ["type/article", "area/ai"], "created": "2026-10-12", "updated": "2026-10-12", "description": "从执行记录、产物和外部状态出发，设计端到端用例、Skill 触发测试、运行监控与发布闸门，发现 Agent 的真实失败。", "dg-note-properties": {"title": "Agent 应用指南（四）：怎样发现失效，并把它变成回归测试", "created": "2026-10-12", "date": "2026-10-12", "updated": "2026-10-12", "tags": ["type/article", "area/ai"], "description": "从执行记录、产物和外部状态出发，设计端到端用例、Skill 触发测试、运行监控与发布闸门，发现 Agent 的真实失败。", "editorial_status": "待审草稿"}}
+{"dg-publish":true,"dg-path":"Agent 应用指南/04 - 如何发现 Agent 失效.md","permalink":"/Agent 应用指南/04 - 如何发现 Agent 失效/","title":"Agent 应用指南（四）：怎样发现失效，并把它变成回归测试","tags":["type/article","area/ai"],"created":"2026-10-12","updated":"2026-10-13","dg-note-properties":{"title":"Agent 应用指南（四）：怎样发现失效，并把它变成回归测试","created":"2026-10-12","date":"2026-10-12","updated":"2026-10-13","tags":["type/article","area/ai"],"description":"从执行记录、产物和外部状态出发，设计端到端用例、Skill 触发测试、运行监控与发布闸门，发现 Agent 的真实失败。","editorial_status":"待发布"}}
 ---
+
 
 客户反馈助手生成了一份漂亮的工单草稿，说“已检查重复，可以提交”。我们该相信吗？
 
@@ -9,6 +10,8 @@
 本篇讨论的验证，不是让 Agent 多说一句“我检查过”，而是让团队能从实际证据判断：它做了什么、做对了什么、哪里没有做成。
 
 所有测试卡和记录字段均为教学示例，没有在一个真实反馈处理产品上执行。
+
+本系列的助手只在指定反馈与项目里查资料、出草稿，具体工单经用户确认后才可创建。案例里，F-101/F-102 是桌面版 2.4 导出 E42 的相似反馈，F-103 是排序建议，T-217 是已有的相似工单；T-304 是用户确认 F-103 新建后的示例结果。后文的测试卡都围绕这些虚构材料展开。
 
 ## 1. 先让失败可见：记录三个层面
 
@@ -118,11 +121,13 @@ flowchart TD
 Skill 测试至少分开四个问题：
 
 1. **该触发时有没有触发？** 明确请求与自然改写都要覆盖。
-2. **不该触发时有没有误触发？** 概念解释、相邻任务、只读请求要覆盖。
+2. **不该触发时有没有误触发？** 覆盖概念解释、相邻但不属于本技能的任务，例如只要求统计条数、不做工单分析的请求。
 3. **触发后有没有按方法执行？** 来源、缺项、输出模板和停止条件是否落实？
 4. **实际结果是否可用？** 草稿质量、程序执行与外部状态是否满足任务？
 
-开放规范的格式检查只能证明文件满足命名和格式约定，不证明上述行为正确。工具依赖声明，也不能证明连接器和凭据真的可用。[3]
+开放规范的格式检查只能证明文件满足命名和元数据约定，不证明上述行为正确。`allowed-tools` 是可选的实验性预批准工具字段，宿主是否支持可能不同；它不能替代账号权限和本次业务授权。[3]
+
+工具依赖是另一个问题。例如 OpenAI 的 `agents/openai.yaml` 可另行声明所需工具。[5] 声明了依赖，也不证明连接器、凭据与执行环境已经可用；仍要通过实际调用验证。
 
 OpenAI 的 Skill 评估文章展示了用小型正负请求集、轨迹检查、确定性验证和质量量表逐步扩展评估的方法。[4]
 
@@ -136,7 +141,7 @@ OpenAI 的 Skill 评估文章展示了用小型正负请求集、轨迹检查、
 
 每次测试要隔离或重置可变状态。上一轮留下的工单可能让下一轮看似查重成功，也可能导致意外重复。测试用身份、测试项目和清理规则都应明确。
 
-保留一部分未参与调优的用例。已稳定的行为进入回归集，新的难题进入能力评估集。不要只测新能力，却忽略老能力退化。[1][2]
+保留一部分未参与调优的用例。已稳定的行为进入回归集，也就是改版后复查既有能力的一组测试；新的难题进入能力评估集。不要只测新能力，却忽略老能力退化。[1][2]
 
 小规模用例适合发现具体缺陷和建立基线，不足以证明任意输入都可靠，也不能直接推导生产成功率。
 
@@ -219,7 +224,12 @@ flowchart TD
 
 - [1] Anthropic，**Demystifying evals for AI agents**，**The structure of an evaluation**、**Step 5: Design graders thoughtfully**、**How to think about non-determinism in evaluations for agents**、**How evals fit with other methods for a holistic understanding of agents**。https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents
 - [2] LangChain，**Agent Evaluation Readiness Checklist**，**Before you build evals**、**Choose your evaluation level**、**Dataset construction**、**Running & iterating**。https://www.langchain.com/blog/agent-evaluation-readiness-checklist
-- [3] Agent Skills，**Specification**，**Validation**、**allowed-tools field**。https://agentskills.io/specification
+- [3] Agent Skills，**Specification**，**Validation**、**allowed-tools field**。原文将后者称为预批准工具字段，并注明其支持可能因实现而异；它不是工具依赖声明。https://agentskills.io/specification#validation ；https://agentskills.io/specification#allowed-tools-field
 - [4] OpenAI，**Testing Agent Skills Systematically with Evals**，§4—7：触发请求集、确定性检查、质量量表与扩展评估。https://developers.openai.com/blog/eval-skills
+- [5] OpenAI，**Build skills**，**Optional metadata**。该段说明可通过 `agents/openai.yaml` 配置元数据并声明工具依赖，不等于连接器已经接通或工具执行已获授权。https://learn.chatgpt.com/docs/build-skills#optional-metadata
 
 本文记录字段、测试卡、监控表和发布闸门是应用建议，并非官方规定的唯一清单。没有运行本示例的测试，也没有提供生产可靠性或绝对安全保证。具体产品 API 和界面会变化，本文优先保留可迁移的方法。
+
+## 系列导航
+
+[系列入口](https://nexus.sigmoid.cc/Agent%20%E5%BA%94%E7%94%A8%E6%8C%87%E5%8D%97/00%20-%20Agent%20%E5%BA%94%E7%94%A8%E6%8C%87%E5%8D%97/) · 上一篇：[它为什么会失效，以及先查哪里](https://nexus.sigmoid.cc/Agent%20%E5%BA%94%E7%94%A8%E6%8C%87%E5%8D%97/03%20-%20Agent%20%E4%B8%BA%E4%BB%80%E4%B9%88%E5%A4%B1%E6%95%88/)
